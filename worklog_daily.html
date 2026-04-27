@@ -35,7 +35,7 @@ main,nav,footer{position:relative;z-index:1;}
 .worklog-bar { display: flex; align-items: center; background: rgba(255,255,255,0.85); border: 1px solid rgba(15,23,42,0.1); border-radius: 16px; padding: 6px; box-shadow: 0 8px 20px -8px rgba(0,0,0,0.05); }
 .worklog-bar:focus-within { border-color: rgba(99,102,241,0.5); box-shadow: 0 8px 24px -8px rgba(99,102,241,0.2); }
 .wl-inp { border: none; background: transparent; padding: 12px 16px; font-size: 14px; font-weight: 600; outline: none; }
-.wl-biz { width: 160px; border-right: 1px solid rgba(15,23,42,0.06); cursor: pointer; }
+.wl-biz { width: 160px; border-right: 1px solid rgba(15,23,42,0.06); }
 .wl-task { flex: 1.5; border-right: 1px solid rgba(15,23,42,0.06); }
 .wl-rel { flex: 1; }
 
@@ -45,17 +45,19 @@ main,nav,footer{position:relative;z-index:1;}
 .bg2{background:rgba(255,255,255,0.7);color:var(--ink-soft);border:1px solid rgba(15,23,42,0.1);}.bg2:hover{background:#fff;}
 .bd{background:rgba(254,242,242,0.9);color:#991b1b;border:1px solid rgba(252,165,165,0.4);}.bd:hover{background:#fef2f2;}
 .bsm{padding:5px 12px;font-size:11px;}
-.btn-add { background: #0b1220; color: #fff; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(15,23,42,0.15); }
+.btn-add { background: #0b1220; color: #fff; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(15,23,42,0.15); flex-shrink: 0; }
 .btn-add:hover { transform: translateY(-1px); background: #1e293b; }
 
 /* List Styles */
-.task-list { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; min-height: 200px; }
+.task-list { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; min-height: 200px; max-height: 500px; overflow-y: auto; padding-right: 4px; }
+.task-list::-webkit-scrollbar { width: 6px; }
+.task-list::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.1); border-radius: 99px; }
 .task-item { background: rgba(255,255,255,0.6); border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; transition: all 0.2s; }
 .task-item:hover { background: rgba(255,255,255,0.9); border-color: rgba(15,23,42,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 .badge-biz { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 800; color: #475569; background: #f1f5f9; padding: 6px 12px; border-radius: 8px; letter-spacing: 0.05em; }
-.task-text { font-size: 14px; font-weight: 600; flex: 1; }
+.task-text { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.4; }
 .task-rel { font-size: 13px; font-weight: 700; color: #4f46e5; background: #e0e7ff; padding: 4px 10px; border-radius: 8px; }
-.task-time { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--ink-mute); font-weight: 600; width: 60px; text-align: center; }
+.task-time { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--ink-mute); font-weight: 600; width: 50px; text-align: center; }
 
 /* Result Box */
 .result-box { background: rgba(255,255,255,0.8); border: 1px solid rgba(15,23,42,0.1); border-radius: 16px; padding: 24px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.6; color: var(--ink-soft); min-height: 400px; white-space: pre-wrap; outline: none; }
@@ -74,7 +76,8 @@ footer{font-size:11px;color:var(--ink-mute);padding:0 0 24px;text-align:center;f
 .mbg.open{display:flex;}
 .mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.92) 0%,rgba(248,250,252,0.88) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);}
 .field{margin-bottom:16px;}.field label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
-.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink);outline:none;}
+.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:10px 12px;font-size:13px;font-weight:600;color:var(--ink);outline:none; transition:border-color .2s;}
+.inp:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
 </style>
 </head>
 <body>
@@ -114,9 +117,9 @@ footer{font-size:11px;color:var(--ink-mute);padding:0 0 24px;text-align:center;f
         </div>
 
         <div class="worklog-bar">
-          <select id="inBiz" class="wl-inp wl-biz">
-            <option value="">사업 선택 (로딩중)</option>
-          </select>
+          <input list="bizList" id="inBiz" class="wl-inp wl-biz" placeholder="사업명 (약어)" autocomplete="off">
+          <datalist id="bizList"></datalist>
+          
           <input id="inTask" class="wl-inp wl-task" type="text" placeholder="수행 업무 (예: 인계, 공유, 작성 등)" autocomplete="off">
           <input id="inDetails" class="wl-inp wl-rel" type="text" placeholder="관계 (예: w장t,1k)" autocomplete="off">
           <button class="btn-add" onclick="addLog()" title="추가 (Enter)">
@@ -153,9 +156,13 @@ footer{font-size:11px;color:var(--ink-mute);padding:0 0 24px;text-align:center;f
   <div class="mbox">
     <div class="mtitle" style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:800; letter-spacing:-0.03em; margin-bottom:24px;">업무 수정</div>
     <input type="hidden" id="eidx" value="-1"/>
-    <div class="field"><label>사업명</label><select class="inp" id="ebiz"></select></div>
+    
+    <div class="field">
+      <label>사업명</label>
+      <input list="bizList" class="inp" id="ebiz" placeholder="사업명 선택 또는 입력">
+    </div>
     <div class="field"><label>업무 내용</label><input class="inp" id="etask"></div>
-    <div class="field"><label>관계</label><input class="inp" id="erel"></div>
+    <div class="field"><label>관계</label><input class="inp" id="erel" placeholder="예: w장t,1k"></div>
     <div class="flex gap-3 mt-6 justify-end">
       <button class="btn bg2" onclick="closeModal()">취소</button>
       <button class="btn bp" onclick="saveModal()"><span class="ms" style="font-size:14px;">database</span>DB 저장</button>
@@ -164,16 +171,12 @@ footer{font-size:11px;color:var(--ink-mute);padding:0 0 24px;text-align:center;f
 </div>
 <div class="toast" id="toast"></div>
 
-<form id="hidden_form" target="hidden_iframe" method="POST" style="display:none;"><input type="hidden" name="payload" id="payload_input"></form>
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
 <script>
 // --- DB 연동 설정 ---
 const SHEET_ID = '1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
 const API = 'https://script.google.com/macros/s/AKfycbz_RRZrnYG7lPT67musJP_AWS2x71bPA__meElbwAnbJmmYTVHvlGvkvuoRV-lGzzn9Qg/exec';
-// 시트1 (사업목록)
+// 시트명 규칙이 progress_manage 가 0번, worklog_daily가 1311868016
 const PROJECTS_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`; 
-// 일일보고 시트 (gid=1311868016)
 const WORKLOG_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1311868016`;
 
 let projList = []; // 사업명(약어) 리스트
@@ -187,33 +190,43 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inpDate').value = new Date(d - offset).toISOString().split('T')[0];
 });
 
-// CSV 파서
-function parseCSV(text){
-  const lines=text.trim().split('\n');
-  if(lines.length < 1) return [];
-  const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line=>{
-    const v=[]; let c='',q=false;
-    for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;}else if(ch===','&&!q){v.push(c.trim());c='';}else{c+=ch;}}
+// CSV 파서 (공백이나 에러에 무너지지 않도록 강력하게 보강)
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return []; // 데이터가 없거나 헤더만 있는 경우
+  const hdrs = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  const results = [];
+  
+  for (let j = 1; j < lines.length; j++) {
+    const line = lines[j];
+    if (!line.trim()) continue;
+    const v = []; let c = '', q = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { q = !q; } 
+      else if (ch === ',' && !q) { v.push(c.trim()); c = ''; } 
+      else { c += ch; }
+    }
     v.push(c.trim());
-    const o={};hdrs.forEach((h,i)=>o[h]=(v[i]||'').replace(/^"|"$/g,''));return o;
-  }).filter(r=>r.id); // id가 있는 행만
+    const o = {};
+    hdrs.forEach((h, i) => o[h] = (v[i] || '').replace(/^"|"$/g, ''));
+    if (o.id) results.push(o); // id가 존재하는 유효한 행만 담기
+  }
+  return results;
 }
 
 async function loadData() {
   setSS('loading', 'DB 동기화 중...');
   try {
-    // 1. 사업명 목록(시트1) 불러오기
+    // 1. 사업명 목록(progress_manage) 불러오기
     const r1 = await fetch(PROJECTS_CSV);
     const t1 = await r1.text();
     const projs = parseCSV(t1).sort((a,b) => (Number(a.order)||0) - (Number(b.order)||0));
     projList = projs.map(p => p.id).filter(Boolean);
     
-    // Select Box 채우기
-    const selBiz = document.getElementById('inBiz');
-    const selEbiz = document.getElementById('ebiz');
-    let opts = '<option value="">선택</option>' + projList.map(p => `<option value="${p}">${p}</option>`).join('');
-    selBiz.innerHTML = opts; selEbiz.innerHTML = opts;
+    // Datalist 채우기 (타이핑 시 자동완성 제공)
+    const dl = document.getElementById('bizList');
+    dl.innerHTML = projList.map(p => `<option value="${p}">`).join('');
 
     // 2. 업무일지(worklog_daily) 불러오기
     const r2 = await fetch(WORKLOG_CSV);
@@ -224,7 +237,7 @@ async function loadData() {
     setSS('ok', '동기화 완료');
   } catch (e) {
     setSS('err', '연결 실패');
-    showToast('DB 정보를 불러오는데 실패했습니다.');
+    showToast('DB 동기화에 실패했습니다. 공유 권한을 확인해주세요.');
   }
 }
 
@@ -235,29 +248,28 @@ function filterLogsByDate() {
   render();
 }
 
-// 관계(relation) 자동 포매팅 정규식 로직
+// 관계(relation) 자동 포매팅 
+// ex: to장t,1k -> (to 장t, 1k)
 function formatRelation(raw) {
   if(!raw) return "";
   let r = raw.trim();
-  // 기존 괄호 제거
-  r = r.replace(/^\(|\)$/g, '').trim();
-  // w, to, from 뒤에 무조건 띄어쓰기 1개
-  r = r.replace(/(w|to|from)\s*/gi, (match, p1) => p1.toLowerCase() + ' ');
-  // 쉼표 뒤에 무조건 띄어쓰기 1개
+  r = r.replace(/^\(|\)$/g, '').trim(); // 겉 괄호 제거
+  // w, to, from 글자 뒤에 무조건 띄어쓰기 한 칸 보장
+  r = r.replace(/(^|\s|,)(w|to|from)\s*/gi, (match, p1, p2) => p1 + p2.toLowerCase() + ' ');
+  // 쉼표 뒤에 무조건 띄어쓰기 한 칸 보장
   r = r.replace(/\s*,\s*/g, ', ');
-  // 다중 띄어쓰기 압축
-  r = r.replace(/\s{2,}/g, ' ');
+  r = r.replace(/\s{2,}/g, ' '); // 불필요한 다중 띄어쓰기 압축
   return r.length > 0 ? `(${r.trim()})` : '';
 }
 
 function addLog() {
   const user = document.getElementById('inpUser').value.trim() || '이찬';
   const date = document.getElementById('inpDate').value;
-  const biz = document.getElementById('inBiz').value;
+  const biz = document.getElementById('inBiz').value.trim();
   const task = document.getElementById('inTask').value.trim();
   const rawRel = document.getElementById('inDetails').value.trim();
 
-  if(!biz || !task) { showToast('사업명과 업무내용을 입력하세요.'); return; }
+  if(!biz || !task) { showToast('사업명과 업무내용을 입력하세요.'); document.getElementById(biz ? 'inTask' : 'inBiz').focus(); return; }
 
   const d = new Date();
   const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
@@ -277,7 +289,7 @@ function addLog() {
   
   document.getElementById('inTask').value = '';
   document.getElementById('inDetails').value = '';
-  document.getElementById('inBiz').focus();
+  document.getElementById('inBiz').focus(); // 입력 완료 후 탭 포커스 복귀
   
   saveAll(); // 자동 저장
 }
@@ -285,7 +297,7 @@ function addLog() {
 function render() {
   const elList = document.getElementById('logList');
   if (currentLogs.length === 0) {
-    elList.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-mute);font-size:13px;border:1px dashed rgba(15,23,42,0.1);border-radius:12px;">오늘 작성된 업무가 없습니다.</div>`;
+    elList.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-mute);font-size:13px;border:1px dashed rgba(15,23,42,0.1);border-radius:12px;">오늘 작성된 업무가 없습니다. 위에서 추가해주세요.</div>`;
     document.getElementById('resultBox').innerText = "결과가 표시됩니다.";
     return;
   }
@@ -306,18 +318,18 @@ function render() {
     `;
   }).join('');
   
+  // 리스트 스크롤 최하단으로 (가장 최근 추가된 것 보기 편하게)
+  elList.scrollTop = elList.scrollHeight;
   generateResultText();
 }
 
 function generateResultText() {
-  // 사업별 그룹화
   const grouped = currentLogs.reduce((acc, log) => { 
     if (!acc[log.biz]) acc[log.biz] = []; 
     acc[log.biz].push(log); 
     return acc; 
   }, {});
   
-  // projList 순서대로 정렬
   const sortedKeys = Object.keys(grouped).sort((a, b) => { 
     let iA = projList.indexOf(a), iB = projList.indexOf(b); 
     if (iA === -1) iA = 999; if (iB === -1) iB = 999; 
@@ -338,14 +350,12 @@ function generateResultText() {
 // Edit Modal Functions
 function openEdit(currentIdx) {
   const log = currentLogs[currentIdx];
-  // allLogs 내에서의 실제 인덱스 찾기
   const realIdx = allLogs.findIndex(l => l.id === log.id);
   
   document.getElementById('eidx').value = realIdx;
   document.getElementById('ebiz').value = log.biz;
   document.getElementById('etask').value = log.task;
-  // 괄호 벗겨서 인풋에 세팅
-  document.getElementById('erel').value = log.relation.replace(/^\(|\)$/g, '');
+  document.getElementById('erel').value = log.relation.replace(/^\(|\)$/g, ''); // 괄호 벗겨서 표시
   document.getElementById('emodal').classList.add('open');
 }
 
@@ -355,8 +365,8 @@ function saveModal(){
   const realIdx = Number(document.getElementById('eidx').value);
   if(!confirm("수정 사항을 DB에 반영하시겠습니까?")) return;
 
-  allLogs[realIdx].biz = document.getElementById('ebiz').value;
-  allLogs[realIdx].task = document.getElementById('etask').value;
+  allLogs[realIdx].biz = document.getElementById('ebiz').value.trim();
+  allLogs[realIdx].task = document.getElementById('etask').value.trim();
   allLogs[realIdx].relation = formatRelation(document.getElementById('erel').value);
   
   closeModal();
@@ -378,11 +388,11 @@ function delLog(currentIdx) {
 
 function clearLogs() {
   if(!confirm("현재 화면의 내용만 비우시겠습니까? (DB 데이터는 유지됩니다)")) return;
-  currentLogs = [];
-  render();
+  document.getElementById('inpDate').value = ""; // 날짜를 비워 currentLogs를 강제로 0개로 만듦
+  filterLogsByDate();
 }
 
-// --- DB 동기화 (저장) ---
+// --- DB 자동 동기화 ---
 function saveAll() {
   setSS('loading', '저장 중...');
   const payloadObj = {
@@ -427,11 +437,11 @@ function exportCSV() {
   link.click();
 }
 
-// Enter Key 지원
+// Enter/Tab 키 지원 (초고속 입력)
+document.getElementById('inBiz').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('inTask').focus(); });
 document.getElementById('inTask').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('inDetails').focus(); });
 document.getElementById('inDetails').addEventListener('keydown', e => { if(e.key === 'Enter') addLog(); });
 
-// 초기 로드 실행
 loadData();
 </script>
 </body>
