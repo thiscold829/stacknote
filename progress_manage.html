@@ -27,7 +27,7 @@ main,nav,footer{position:relative;z-index:1;}
 .tbl tr[draggable]:hover td{background:rgba(255,255,255,0.5);}
 .tbl tr.dragging{opacity:0.35;}
 .tbl tr.drag-over td{background:rgba(99,102,241,0.06);}
-.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;color:var(--ink);outline:none;transition:border-color .2s;}
+.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink);outline:none;transition:border-color .2s;}
 .inp:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;}
 .b-ok{background:#ecfdf5;color:#065f46;}.b-warn{background:#fffbeb;color:#92400e;}.b-crit{background:#fef2f2;color:#991b1b;}.b-done{background:#f1f5f9;color:#475569;}.b-idle{background:#f8fafc;color:#94a3b8;}
@@ -37,12 +37,21 @@ main,nav,footer{position:relative;z-index:1;}
 .bp{background:#0b1220;color:#fff;box-shadow:0 4px 12px rgba(15,23,42,0.2);}.bp:hover{background:#1e293b;transform:translateY(-1px);}
 .bg2{background:rgba(255,255,255,0.7);color:var(--ink-soft);border:1px solid rgba(15,23,42,0.1);}.bg2:hover{background:#fff;}
 .bd{background:rgba(254,242,242,0.9);color:#991b1b;border:1px solid rgba(252,165,165,0.4);}.bd:hover{background:#fef2f2;}
+.bd-solid{background:#ef4444;color:#fff;box-shadow:0 4px 12px rgba(239,68,68,0.2);}.bd-solid:hover{background:#dc2626;transform:translateY(-1px);}
 .bsm{padding:5px 12px;font-size:11px;}
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;box-shadow:0 20px 40px rgba(15,23,42,0.3);white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.mbg{position:fixed;inset:0;background:rgba(15,23,42,0.15);backdrop-filter:blur(12px);z-index:900;display:none;align-items:center;justify-content:center;}
-.mbg.open{display:flex;}
-.mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.92) 0%,rgba(248,250,252,0.88) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);}
+
+/* 모달 기본 스타일 */
+.mbg{position:fixed;inset:0;background:rgba(15,23,42,0.15);backdrop-filter:blur(12px);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s ease;}
+.mbg.open{opacity:1;visibility:visible;}
+.mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.95) 0%,rgba(248,250,252,0.9) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
+.mbg.open .mbox{transform:translateY(0);}
+
+/* 경고 특화 모달 스타일 */
+.mbox-danger { border-top: 4px solid #ef4444; }
+.mtitle-danger { color: #991b1b; display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+
 .mtitle{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;margin-bottom:24px;}
 .field{margin-bottom:16px;}.field label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
 .sdot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
@@ -65,17 +74,18 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
       <span class="flex items-center gap-2 text-[11px] font-bold text-slate-400 mr-2">
         <span class="sdot loading" id="sdot"></span><span id="stxt">불러오는 중...</span>
       </span>
-      <button class="btn bg2 bsm" onclick="location.href='index.html'"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 500;">home</span>메인으로</button>
-      <button class="btn bg2 bsm" onclick="loadData()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 500;">database</span>DB 불러오기</button>
-      <button class="btn bp" onclick="saveAll()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 600;">cloud_upload</span>수동 저장</button>
+      <button class="btn bg2 bsm" onclick="location.href='index.html'"><span class="ms" style="font-size:14px;">home</span>메인으로</button>
+      <button class="btn bg2 bsm" onclick="loadData()"><span class="ms" style="font-size:14px;">sync</span>DB 동기화</button>
+      <button class="btn bp" onclick="saveAll()"><span class="ms" style="font-size:14px;">cloud_upload</span>수동 저장</button>
     </div>
   </div>
 </nav>
+
 <main class="pt-[100px] px-10 pb-10 w-full max-w-[1920px] mx-auto flex-1">
   <section class="mt-4">
     <div class="flex items-baseline justify-between mb-6 px-1">
       <div><h2 class="stitle" style="display:inline;">사업 진도관리</h2><span class="sko">Project Progress Manager</span></div>
-      <button class="btn bg2" onclick="openAdd()"><span class="ms" style="font-size:15px;font-variation-settings:'FILL' 0,'wght' 500;">add_circle</span>사업 추가</button>
+      <button class="btn bg2" onclick="openAdd()"><span class="ms" style="font-size:15px;">add_circle</span>사업 추가</button>
     </div>
     <div class="island">
       <table class="tbl">
@@ -110,29 +120,62 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
     <div class="field"><label>구글시트 URL (팝업에 표시)</label><input class="inp" id="eurl" placeholder="https://docs.google.com/spreadsheets/d/..."/></div>
     <div class="flex gap-3 mt-6 justify-end">
       <button class="btn bg2" onclick="closeModal()">취소</button>
-      <button class="btn bp" onclick="saveModal()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 600;">database</span>DB저장</button>
+      <button class="btn bp" onclick="saveModal()"><span class="ms" style="font-size:14px;">database</span>DB저장</button>
     </div>
   </div>
 </div>
+
+<div class="mbg" id="delModal">
+  <div class="mbox mbox-danger">
+    <div class="mtitle-danger">
+      <span class="ms" style="font-size: 24px;">warning</span> DB 영구 삭제 경고
+    </div>
+    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
+      <p id="delMsg" style="font-size: 14px; font-weight: 700; color: #991b1b; word-break: break-all;"></p>
+    </div>
+    <p style="font-size: 13px; color: #475569; margin-bottom: 24px; line-height: 1.5; font-weight: 600;">
+      이 작업은 되돌릴 수 없으며, 확인 시 <span style="color: #ef4444;">클라우드 데이터베이스에서 즉시 삭제</span>됩니다.<br>정말 삭제하시겠습니까?
+    </p>
+    <div class="flex gap-3 justify-end">
+      <button class="btn bg2" onclick="closeDelModal()">취소</button>
+      <button class="btn bd-solid" onclick="confirmDel()"><span class="ms" style="font-size:14px;">delete_forever</span>삭제 실행</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// API 연동 세팅
 const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
-const CSV_URL='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/export?format=csv';
+// 진도관리 시트는 첫 번째 탭이므로 gid=0 을 가리킴
+const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
 const API='https://script.google.com/macros/s/AKfycbz_RRZrnYG7lPT67musJP_AWS2x71bPA__meElbwAnbJmmYTVHvlGvkvuoRV-lGzzn9Qg/exec';
-let projects=[],dragSrc=null;
+
+let projects=[], dragSrc=null;
+let pendingDelIdx = -1; // 삭제 대기 중인 항목 인덱스
+
 const SL={ok:'정상',warn:'주의',crit:'긴급',done:'완료',idle:'미시작'};
 const SC={ok:'b-ok',warn:'b-warn',crit:'b-crit',done:'b-done',idle:'b-idle'};
 
 function parseCSV(t){
   const lines=t.trim().split('\n');
+  if(lines.length < 2) return [];
   const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line=>{
-    const v=[];let c='',q=false;
-    for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;}else if(ch===','&&!q){v.push(c.trim());c='';}else{c+=ch;}}
+  const results = [];
+  for (let j = 1; j < lines.length; j++) {
+    const line = lines[j];
+    if (!line.trim()) continue;
+    const v = []; let c = '', q = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { q = !q; } else if (ch === ',' && !q) { v.push(c.trim()); c = ''; } else { c += ch; }
+    }
     v.push(c.trim());
-    const o={};hdrs.forEach((h,i)=>o[h]=(v[i]||'').replace(/^"|"$/g,''));return o;
-  }).filter(r=>r.id&&r.id!=='id');
+    const o = {}; hdrs.forEach((h, i) => o[h] = (v[i] || '').replace(/^"|"$/g, ''));
+    if (o.id) results.push(o);
+  }
+  return results;
 }
 
 async function loadData(){
@@ -152,7 +195,7 @@ function render(){
     const pct=Number(p.pct)||0;
     const su=p.sheet_url?'…'+p.sheet_url.slice(-28):'—';
     return `<tr draggable="true" ondragstart="ds(event,${i})" ondragover="dov(event,${i})" ondrop="dp(event,${i})" ondragend="de()">
-      <td style="cursor:grab;color:#cbd5e1;text-align:center;"><span class="ms" style="font-size:18px;font-variation-settings:'wght' 300;">drag_indicator</span></td>
+      <td style="cursor:grab;color:#cbd5e1;text-align:center;"><span class="ms" style="font-size:18px;">drag_indicator</span></td>
       <td style="font-family:'Space Grotesk';font-size:12px;color:var(--ink-mute);font-weight:700;">${i+1}</td>
       <td style="font-family:'Space Grotesk';font-size:14px;font-weight:800;letter-spacing:-0.02em;">${p.id}</td>
       <td style="font-size:13px;font-weight:600;" title="${p.full_name}">${p.full_name}</td>
@@ -161,8 +204,8 @@ function render(){
       <td><span class="badge ${SC[p.status]||'b-idle'}">${SL[p.status]||p.status}</span></td>
       <td style="font-size:11px;color:var(--ink-mute);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.sheet_url||''}">${su}</td>
       <td><div style="display:flex;gap:6px;">
-        <button class="btn bg2 bsm" onclick="openEdit(${i})"><span class="ms" style="font-size:13px;font-variation-settings:'FILL' 0,'wght' 400;">edit</span></button>
-        <button class="btn bd bsm" onclick="del(${i})"><span class="ms" style="font-size:13px;font-variation-settings:'FILL' 0,'wght' 400;">delete</span></button>
+        <button class="btn bg2 bsm" onclick="openEdit(${i})"><span class="ms" style="font-size:13px;">edit</span></button>
+        <button class="btn bd bsm" onclick="initDel(${i})"><span class="ms" style="font-size:13px;">delete</span></button>
       </div></td>
     </tr>`;
   }).join('');
@@ -171,14 +214,14 @@ function render(){
 function ds(e,i){dragSrc=i;e.currentTarget.classList.add('dragging');}
 function dov(e,i){e.preventDefault();document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('drag-over'));if(i!==dragSrc)e.currentTarget.classList.add('drag-over');}
 
-// 드래그 앤 드롭 완료 시 자동 저장 로직 추가
+// 순서 변경 시 자동 저장
 function dp(e,i){
   e.preventDefault();
   if(dragSrc===null||dragSrc===i)return;
   const m=projects.splice(dragSrc,1)[0];
   projects.splice(i,0,m);
   render();
-  saveAll(); // 순서 변경 시 자동 저장
+  saveAll();
 }
 function de(){document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('dragging','drag-over'));dragSrc=null;}
 
@@ -191,6 +234,7 @@ function openAdd(){
   document.getElementById('estat').value='idle';
   document.getElementById('emodal').classList.add('open');
 }
+
 function openEdit(i){
   const p=projects[i];
   document.getElementById('mtitle').textContent='사업 수정';
@@ -205,7 +249,7 @@ function openEdit(i){
 }
 function closeModal(){document.getElementById('emodal').classList.remove('open');}
 
-// 추가/수정 확인 시 자동 저장 로직 (안내창 포함)
+// 추가/수정 후 자동 저장
 function saveModal(){
   const idx=Number(document.getElementById('eidx').value);
   const o={
@@ -217,42 +261,53 @@ function saveModal(){
     sheet_url:document.getElementById('eurl').value.trim(),
     order:idx===-1?projects.length+1:(projects[idx].order||idx+1)
   };
-  
   if(!o.id||!o.full_name){showToast('약어와 풀네임 필수');return;}
-
-  // 안내창 출력
+  
   if(!confirm(`입력하신 정보가 DB에 반영됩니다.\n계속하시겠습니까?`)) return;
 
   if(idx===-1)projects.push(o);else projects[idx]={...projects[idx],...o};
-  
   render();
   closeModal();
-  saveAll(); // 자동 저장
+  saveAll();
 }
 
-// 삭제 시 2중 경고 및 자동 저장 로직
-function del(i){
-  const pId = projects[i].id;
+// ─── 2중 경고 삭제 로직 시작 ───
+function initDel(i) {
+  // 1차 경고: 브라우저 기본 Confirm
+  if(!confirm(`"${projects[i].id}" 항목을 정말 삭제하시겠습니까?`)) return;
   
-  // 1차 안내
-  if(!confirm(`"${pId}" 항목이 DB에서 삭제됩니다.\n계속하시겠습니까?`)) return;
-  
-  // 2차 안내
-  if(!confirm(`[경고] DB 삭제 시 복구가 어렵습니다.\n정말 삭제하시겠습니까?`)) return;
-  
-  projects.splice(i,1);
-  render();
-  saveAll(); // 자동 저장
+  // 2차 경고: 레이어 팝업 띄우기
+  pendingDelIdx = i;
+  document.getElementById('delMsg').textContent = `[${projects[i].id}] ${projects[i].full_name}`;
+  document.getElementById('delModal').classList.add('open');
 }
 
+function closeDelModal() {
+  document.getElementById('delModal').classList.remove('open');
+  pendingDelIdx = -1;
+}
+
+function confirmDel() {
+  if (pendingDelIdx > -1) {
+    projects.splice(pendingDelIdx, 1);
+    render();
+    saveAll();
+    closeDelModal();
+  }
+}
+// ─── 2중 경고 삭제 로직 끝 ───
+
+// ─── 구글 시트 저장 핵심 통신 모듈 ───
 function saveAll(){
   setSS('loading','저장 중...');
   
+  // 백엔드의 'progress_manage' 시트에 맞춘 write 액션 전송
   const payloadObj = {
     action: 'write',
     projects: projects.map((p,i)=>({...p,order:i+1}))
   };
   
+  // 브라우저 튕김 현상을 막는 Form-urlencoded POST 방식
   fetch(API, {
     method: 'POST',
     mode: 'no-cors',
@@ -270,6 +325,7 @@ function saveAll(){
 function setSS(s,t){document.getElementById('sdot').className='sdot '+s;document.getElementById('stxt').textContent=t;}
 let tt;
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);}
+
 loadData();
 </script>
 </body>
