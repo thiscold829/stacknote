@@ -51,16 +51,65 @@ main,nav,footer{position:relative;z-index:1;}
 .app-btn .lbl{font-size:13px;font-weight:700;color:var(--ink);letter-spacing:-0.01em;}
 footer{font-size:11px;color:var(--ink-mute);padding:60px 0 30px;text-align:center;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;opacity:0.6;}
 
-/* 모달 애니메이션 최적화: 선후 딜레이 제거 및 속도 상향 */
-#detail-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.25s ease,visibility 0.25s ease;}
-#detail-modal.active{opacity:1;visibility:visible;pointer-events:auto;}
-.modal-overlay{position:absolute;inset:0;background:rgba(8,18,38,0.18);backdrop-filter:blur(16px) brightness(1.08) saturate(1.4);-webkit-backdrop-filter:blur(16px) brightness(1.08) saturate(1.4);opacity:0;transition:opacity 0.25s ease;}
-#detail-modal.active .modal-overlay{opacity:1;}
-.modal-content{position:relative;z-index:10;width:92%;height:90%;background:linear-gradient(160deg,rgba(255,255,255,0.72) 0%,rgba(248,252,255,0.58) 40%,rgba(240,248,255,0.48) 100%);backdrop-filter:blur(60px) saturate(200%) brightness(1.1);-webkit-backdrop-filter:blur(60px) saturate(200%) brightness(1.1);border:1px solid rgba(255,255,255,0.9);border-top:2px solid rgba(255,255,255,1);border-radius:44px;box-shadow:0 -1px 0 rgba(255,255,255,1),0 8px 32px -8px rgba(255,255,255,0.5),0 40px 80px -20px rgba(15,23,42,0.28),inset 0 1px 0 rgba(255,255,255,1);overflow:hidden;transform:translateY(60px) scale(0.96);opacity:0;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1),opacity 0.3s ease;}
-#detail-modal.active .modal-content{transform:translateY(0) scale(1);opacity:1;}
+/* === 수정된 모달 애니메이션 (Abyssal Rise) === 
+  1. 부력감(Buoyancy) 강화: 깊은 곳에서 살짝 빠르게 튀어오르듯 안착 (cubic-bezier 0.2, 1.15, 0.3, 1)
+  2. 마법 같은 블러: 올라오는 동안 흐린 상태에서 선명한 유리창으로 맺힘
+  3. 0초 딜레이: 애니메이션과 통신이 완전히 병렬로 동시 진행
+*/
+#detail-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;}
+#detail-modal.active{opacity:1;visibility:visible;}
+
+.modal-overlay{
+  position:absolute;inset:0;background:rgba(8,18,38,0.2);
+  backdrop-filter:blur(0px) brightness(1);
+  -webkit-backdrop-filter:blur(0px) brightness(1);
+  opacity:0;transition:backdrop-filter 0.5s ease, opacity 0.3s ease;
+}
+#detail-modal.active .modal-overlay{
+  opacity:1;
+  backdrop-filter:blur(12px) brightness(1.05) saturate(1.2);
+  -webkit-backdrop-filter:blur(12px) brightness(1.05) saturate(1.2);
+}
+
+.modal-content{
+  position:relative;z-index:10;width:92%;height:90%;
+  background:linear-gradient(160deg,rgba(255,255,255,0.72) 0%,rgba(248,252,255,0.58) 40%,rgba(240,248,255,0.48) 100%);
+  backdrop-filter:blur(60px) saturate(200%) brightness(1.1);
+  -webkit-backdrop-filter:blur(60px) saturate(200%) brightness(1.1);
+  border:1px solid rgba(255,255,255,0.9);border-top:2px solid rgba(255,255,255,1);
+  border-radius:44px;
+  box-shadow:0 -1px 0 rgba(255,255,255,1),0 8px 32px -8px rgba(255,255,255,0.5),0 40px 80px -20px rgba(15,23,42,0.28),inset 0 1px 0 rgba(255,255,255,1);
+  overflow:hidden;
+
+  /* 물 속 깊은 곳(Y:160px)에서 수압에 의해 작아진(0.85) 상태로 시작 */
+  transform:translateY(160px) scale(0.85);
+  filter:blur(24px);
+  opacity:0;
+  
+  /* 위로 떠오르는 마법같은 부력 곡선 */
+  transition:transform 0.6s cubic-bezier(0.2, 1.15, 0.3, 1),
+             opacity 0.4s ease-out,
+             filter 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+}
+#detail-modal.active .modal-content{
+  /* 수면 안착 */
+  transform:translateY(0) scale(1);
+  filter:blur(0);
+  opacity:1;
+}
+
+/* 닫기 모션 (물속으로 다시 스르륵 가라앉음) */
+#detail-modal.closing .modal-content{
+  transform:translateY(100px) scale(0.9);
+  filter:blur(16px);
+  opacity:0;
+  transition:transform 0.4s cubic-bezier(0.4, 0, 1, 1),
+             opacity 0.3s ease,
+             filter 0.4s ease;
+}
 
 .modal-content::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:15;background:linear-gradient(160deg,rgba(255,255,255,0.55) 0%,rgba(255,255,255,0.1) 25%,transparent 50%);border-radius:inherit;}
-.modal-close{position:absolute;top:28px;right:28px;z-index:20;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 8px 20px rgba(0,0,0,0.1);}
+.modal-close{position:absolute;top:28px;right:28px;z-index:20;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 8px 20px rgba(0,0,0,0.1);}
 .modal-close:hover{background:#fff;transform:scale(1.12) rotate(90deg);}
 .iframe-wrapper{width:100%;height:100%;}
 #detail-iframe{width:100%;height:100%;border:none;}
@@ -152,6 +201,7 @@ const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
 const CSV_URL='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/export?format=csv';
 const d=new Date();
 document.getElementById('today-date').textContent=d.getFullYear()+'.'+(d.getMonth()+1+'').padStart(2,'0')+'.'+(''+d.getDate()).padStart(2,'0');
+
 function parseCSV(t){
   const lines=t.trim().split('\n');
   const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
@@ -196,21 +246,31 @@ async function loadProjects(){
   }catch(e){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:#dc2626;font-size:13px;font-weight:700;">로드 실패. 새로고침 해주세요.</div>';}
 }
 
-// 딜레이 없이 팝업 상태 클래스를 제어합니다.
+// === 개선된 0초 딜레이 병렬 로딩 로직 ===
 function openDetail(id,sheetUrl){
   const modal=document.getElementById('detail-modal');
+  modal.classList.remove('closing');
+
+  // 클릭 즉시 src를 할당하여 브라우저가 애니메이션과 "동시에" 시트 데이터를 불러오도록 합니다.
   const src=sheetUrl?sheetUrl.replace('/edit?usp=sharing','').replace('/edit?usp=drivesdk','').replace('/edit','')+'/preview':'Project_Detail/Project_Detail_'+id+'.html';
   document.getElementById('detail-iframe').src=src;
+  
   modal.classList.add('active');
   document.body.style.overflow='hidden';
 }
 
 function closeDetail(){
   const modal=document.getElementById('detail-modal');
-  modal.classList.remove('active');
-  document.body.style.overflow='';
-  // 트랜지션이 끝나는 0.25초 직후에 iframe 초기화 (메모리 확보 및 깜빡임 방지)
-  setTimeout(()=>{ document.getElementById('detail-iframe').src='about:blank'; }, 250);
+  
+  // 닫기 모션(.closing) 즉시 시작
+  modal.classList.add('closing');
+  
+  // 가라앉는 애니메이션이 완전히 끝난 후(0.4초)에만 화면 초기화
+  setTimeout(()=>{
+    modal.classList.remove('active','closing');
+    document.body.style.overflow='';
+    document.getElementById('detail-iframe').src='about:blank';
+  }, 400);
 }
 
 loadProjects();
