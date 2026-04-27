@@ -27,7 +27,7 @@ main,nav,footer{position:relative;z-index:1;}
 .tbl tr[draggable]:hover td{background:rgba(255,255,255,0.5);}
 .tbl tr.dragging{opacity:0.35;}
 .tbl tr.drag-over td{background:rgba(99,102,241,0.06);}
-.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;color:var(--ink);outline:none;transition:all .2s;}
+.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;color:var(--ink);outline:none;transition:border-color .2s;}
 .inp:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
 .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;}
 .b-ok{background:#ecfdf5;color:#065f46;}.b-warn{background:#fffbeb;color:#92400e;}.b-crit{background:#fef2f2;color:#991b1b;}.b-done{background:#f1f5f9;color:#475569;}.b-idle{background:#f8fafc;color:#94a3b8;}
@@ -35,17 +35,18 @@ main,nav,footer{position:relative;z-index:1;}
 .mfill{height:100%;border-radius:99px;background:linear-gradient(90deg,#0b1220,#334155);}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;border:none;outline:none;}
 .bp{background:#0b1220;color:#fff;box-shadow:0 4px 12px rgba(15,23,42,0.2);}.bp:hover{background:#1e293b;transform:translateY(-1px);}
-.bg{background:rgba(255,255,255,0.7);color:var(--ink-soft);border:1px solid rgba(15,23,42,0.1);}.bg:hover{background:#fff;}
+.bg2{background:rgba(255,255,255,0.7);color:var(--ink-soft);border:1px solid rgba(15,23,42,0.1);}.bg2:hover{background:#fff;}
 .bd{background:rgba(254,242,242,0.9);color:#991b1b;border:1px solid rgba(252,165,165,0.4);}.bd:hover{background:#fef2f2;}
 .bsm{padding:5px 12px;font-size:11px;}
-.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;box-shadow:0 20px 40px rgba(15,23,42,0.3);}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;box-shadow:0 20px 40px rgba(15,23,42,0.3);white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .mbg{position:fixed;inset:0;background:rgba(15,23,42,0.15);backdrop-filter:blur(12px);z-index:900;display:none;align-items:center;justify-content:center;}
 .mbg.open{display:flex;}
-.mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.9) 0%,rgba(248,250,252,0.85) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);}
+.mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.92) 0%,rgba(248,250,252,0.88) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);}
 .mtitle{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;margin-bottom:24px;}
 .field{margin-bottom:16px;}.field label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
-.sdot{width:6px;height:6px;border-radius:50%;display:inline-block;}.sdot.ok{background:#34d399;}.sdot.loading{background:#fbbf24;animation:pulse 1s infinite;}.sdot.err{background:#f87171;}
+.sdot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.sdot.ok{background:#34d399;}.sdot.loading{background:#fbbf24;animation:pulse 1s infinite;}.sdot.err{background:#f87171;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:center;font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.6;}
 </style>
@@ -64,7 +65,7 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
       <span class="flex items-center gap-2 text-[11px] font-bold text-slate-400">
         <span class="sdot loading" id="sdot"></span><span id="stxt">불러오는 중...</span>
       </span>
-      <button class="btn bg bsm" onclick="loadData()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 500;">refresh</span>새로고침</button>
+      <button class="btn bg2 bsm" onclick="loadData()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 0,'wght' 500;">refresh</span>새로고침</button>
       <button class="btn bp" onclick="saveAll()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 600;">cloud_upload</span>저장</button>
     </div>
   </div>
@@ -73,7 +74,7 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
   <section class="mt-4">
     <div class="flex items-baseline justify-between mb-6 px-1">
       <div><h2 class="stitle" style="display:inline;">사업 진도관리</h2><span class="sko">Project Progress Manager</span></div>
-      <button class="btn bg" onclick="openAdd()"><span class="ms" style="font-size:15px;font-variation-settings:'FILL' 0,'wght' 500;">add_circle</span>사업 추가</button>
+      <button class="btn bg2" onclick="openAdd()"><span class="ms" style="font-size:15px;font-variation-settings:'FILL' 0,'wght' 500;">add_circle</span>사업 추가</button>
     </div>
     <div class="island">
       <table class="tbl">
@@ -98,13 +99,16 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
     <div class="field"><label>팀</label>
       <select class="inp" id="eteam"><option>식품AX팀</option><option>환경AX팀</option><option>PE실</option><option>PM실</option><option>PS실</option></select>
     </div>
-    <div class="field"><label>진행률 (%)</label><input class="inp" id="epct" type="number" min="0" max="100" placeholder="0~100"/></div>
+    <div class="field"><label>진행률 (%)</label><input class="inp" id="epct" type="number" min="0" max="100"/></div>
     <div class="field"><label>상태</label>
-      <select class="inp" id="estat"><option value="ok">정상 (ok)</option><option value="warn">주의 (warn)</option><option value="crit">긴급 (crit)</option><option value="done">완료 (done)</option><option value="idle">미시작 (idle)</option></select>
+      <select class="inp" id="estat">
+        <option value="ok">정상 (ok)</option><option value="warn">주의 (warn)</option>
+        <option value="crit">긴급 (crit)</option><option value="done">완료 (done)</option><option value="idle">미시작 (idle)</option>
+      </select>
     </div>
-    <div class="field"><label>구글시트 URL</label><input class="inp" id="eurl" placeholder="https://docs.google.com/spreadsheets/d/..."/></div>
+    <div class="field"><label>구글시트 URL (팝업에 표시)</label><input class="inp" id="eurl" placeholder="https://docs.google.com/spreadsheets/d/..."/></div>
     <div class="flex gap-3 mt-6 justify-end">
-      <button class="btn bg" onclick="closeModal()">취소</button>
+      <button class="btn bg2" onclick="closeModal()">취소</button>
       <button class="btn bp" onclick="saveModal()"><span class="ms" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 600;">check</span>확인</button>
     </div>
   </div>
@@ -112,17 +116,32 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
 <div class="toast" id="toast"></div>
 
 <script>
+const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
+const CSV_URL='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/export?format=csv';
 const API='https://script.google.com/macros/s/AKfycbyu5hh4fqswIE-SpQ_2v7mlLJRL61bBsLmTtP83uzO9kMY1rGRd-Tdu22nsXBgMIK7V5g/exec';
 let projects=[],dragSrc=null;
 const SL={ok:'정상',warn:'주의',crit:'긴급',done:'완료',idle:'미시작'};
 const SC={ok:'b-ok',warn:'b-warn',crit:'b-crit',done:'b-done',idle:'b-idle'};
 
-function jsonp(url){return new Promise((res,rej)=>{const cb='cb_'+Date.now();const s=document.createElement('script');window[cb]=d=>{res(d);delete window[cb];s.remove();};s.onerror=()=>{rej(new Error('fail'));delete window[cb];s.remove();};s.src=url+'&callback='+cb;document.head.appendChild(s);});}
+function parseCSV(t){
+  const lines=t.trim().split('\n');
+  const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line=>{
+    const v=[];let c='',q=false;
+    for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;}else if(ch===','&&!q){v.push(c.trim());c='';}else{c+=ch;}}
+    v.push(c.trim());
+    const o={};hdrs.forEach((h,i)=>o[h]=(v[i]||'').replace(/^"|"$/g,''));return o;
+  }).filter(r=>r.id&&r.id!=='id');
+}
 
 async function loadData(){
   setSS('loading','불러오는 중...');
-  try{const d=await jsonp(API+'?action=read');projects=(d.projects||[]).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));render();setSS('ok','동기화 완료');}
-  catch(e){setSS('err','연결 실패');showToast('연결 실패');}
+  try{
+    const r=await fetch(CSV_URL);
+    const txt=await r.text();
+    projects=parseCSV(txt).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
+    render();setSS('ok','동기화 완료');
+  }catch(e){setSS('err','연결 실패');showToast('시트 연결 실패');}
 }
 
 function render(){
@@ -130,8 +149,8 @@ function render(){
   if(!projects.length){b.innerHTML='<tr><td colspan="9" style="text-align:center;padding:40px;opacity:0.4;font-size:13px;font-weight:700;">사업 없음</td></tr>';return;}
   b.innerHTML=projects.map((p,i)=>{
     const pct=Number(p.pct)||0;
-    const su=p.sheet_url?'...'+p.sheet_url.slice(-30):'—';
-    return `<tr draggable="true" data-idx="${i}" ondragstart="ds(event,${i})" ondragover="dov(event,${i})" ondrop="dp(event,${i})" ondragend="de()">
+    const su=p.sheet_url?'…'+p.sheet_url.slice(-28):'—';
+    return `<tr draggable="true" ondragstart="ds(event,${i})" ondragover="dov(event,${i})" ondrop="dp(event,${i})" ondragend="de()">
       <td style="cursor:grab;color:#cbd5e1;text-align:center;"><span class="ms" style="font-size:18px;font-variation-settings:'wght' 300;">drag_indicator</span></td>
       <td style="font-family:'Space Grotesk';font-size:12px;color:var(--ink-mute);font-weight:700;">${i+1}</td>
       <td style="font-family:'Space Grotesk';font-size:14px;font-weight:800;letter-spacing:-0.02em;">${p.id}</td>
@@ -139,9 +158,9 @@ function render(){
       <td style="font-size:12px;font-weight:600;color:var(--ink-soft);">${p.team}</td>
       <td><div style="display:flex;align-items:center;gap:8px;"><div class="mbar"><div class="mfill" style="width:${pct}%"></div></div><span style="font-family:'Space Grotesk';font-size:12px;font-weight:700;">${pct}%</span></div></td>
       <td><span class="badge ${SC[p.status]||'b-idle'}">${SL[p.status]||p.status}</span></td>
-      <td style="font-size:11px;color:var(--ink-mute);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.sheet_url||''}">${su}</td>
+      <td style="font-size:11px;color:var(--ink-mute);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.sheet_url||''}">${su}</td>
       <td><div style="display:flex;gap:6px;">
-        <button class="btn bg bsm" onclick="openEdit(${i})"><span class="ms" style="font-size:13px;font-variation-settings:'FILL' 0,'wght' 400;">edit</span></button>
+        <button class="btn bg2 bsm" onclick="openEdit(${i})"><span class="ms" style="font-size:13px;font-variation-settings:'FILL' 0,'wght' 400;">edit</span></button>
         <button class="btn bd bsm" onclick="del(${i})"><span class="ms" style="font-size:13px;font-variation-settings:'FILL' 0,'wght' 400;">delete</span></button>
       </div></td>
     </tr>`;
@@ -153,12 +172,39 @@ function dov(e,i){e.preventDefault();document.querySelectorAll('#tbody tr').forE
 function dp(e,i){e.preventDefault();if(dragSrc===null||dragSrc===i)return;const m=projects.splice(dragSrc,1)[0];projects.splice(i,0,m);render();}
 function de(){document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('dragging','drag-over'));dragSrc=null;}
 
-function openAdd(){document.getElementById('mtitle').textContent='사업 추가';document.getElementById('eidx').value='-1';['eid','efull','eurl'].forEach(id=>document.getElementById(id).value='');document.getElementById('epct').value='0';document.getElementById('eteam').value='식품AX팀';document.getElementById('estat').value='idle';document.getElementById('emodal').classList.add('open');}
-function openEdit(i){const p=projects[i];document.getElementById('mtitle').textContent='사업 수정';document.getElementById('eidx').value=i;document.getElementById('eid').value=p.id||'';document.getElementById('efull').value=p.full_name||'';document.getElementById('eteam').value=p.team||'식품AX팀';document.getElementById('epct').value=p.pct||0;document.getElementById('estat').value=p.status||'idle';document.getElementById('eurl').value=p.sheet_url||'';document.getElementById('emodal').classList.add('open');}
+function openAdd(){
+  document.getElementById('mtitle').textContent='사업 추가';
+  document.getElementById('eidx').value='-1';
+  ['eid','efull','eurl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('epct').value='0';
+  document.getElementById('eteam').value='식품AX팀';
+  document.getElementById('estat').value='idle';
+  document.getElementById('emodal').classList.add('open');
+}
+function openEdit(i){
+  const p=projects[i];
+  document.getElementById('mtitle').textContent='사업 수정';
+  document.getElementById('eidx').value=i;
+  document.getElementById('eid').value=p.id||'';
+  document.getElementById('efull').value=p.full_name||'';
+  document.getElementById('eteam').value=p.team||'식품AX팀';
+  document.getElementById('epct').value=p.pct||0;
+  document.getElementById('estat').value=p.status||'idle';
+  document.getElementById('eurl').value=p.sheet_url||'';
+  document.getElementById('emodal').classList.add('open');
+}
 function closeModal(){document.getElementById('emodal').classList.remove('open');}
 function saveModal(){
   const idx=Number(document.getElementById('eidx').value);
-  const o={id:document.getElementById('eid').value.trim(),full_name:document.getElementById('efull').value.trim(),team:document.getElementById('eteam').value,pct:Number(document.getElementById('epct').value)||0,status:document.getElementById('estat').value,sheet_url:document.getElementById('eurl').value.trim(),order:idx===-1?projects.length+1:projects[idx].order};
+  const o={
+    id:document.getElementById('eid').value.trim(),
+    full_name:document.getElementById('efull').value.trim(),
+    team:document.getElementById('eteam').value,
+    pct:Number(document.getElementById('epct').value)||0,
+    status:document.getElementById('estat').value,
+    sheet_url:document.getElementById('eurl').value.trim(),
+    order:idx===-1?projects.length+1:(projects[idx].order||idx+1)
+  };
   if(!o.id||!o.full_name){showToast('약어와 풀네임 필수');return;}
   if(idx===-1)projects.push(o);else projects[idx]={...projects[idx],...o};
   render();closeModal();showToast(idx===-1?'추가됐습니다':'수정됐습니다');
@@ -169,8 +215,9 @@ async function saveAll(){
   setSS('loading','저장 중...');
   const payload=projects.map((p,i)=>({...p,order:i+1}));
   try{
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'write',projects:payload})});
-    setSS('ok','저장 완료');showToast('저장됐습니다 (반영까지 수초 소요)');
+    fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'write',projects:payload})});
+    // no-cors는 응답 못 받음 — 낙관적 처리
+    setTimeout(()=>{setSS('ok','저장 완료');showToast('저장됐습니다 (수초 후 반영)');},800);
   }catch(e){setSS('err','저장 실패');showToast('저장 실패');}
 }
 
