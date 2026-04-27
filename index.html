@@ -164,32 +164,29 @@
         footer { font-size:11px; color:var(--ink-mute); padding:60px 0 30px; text-align:center; font-weight:700; letter-spacing: 0.15em; text-transform: uppercase; opacity:0.6; }
 
         /* ─────────────────────────────────────────────
-           ★ 260428: LAYER POPUP (RISING FROM THE DEEP)
+           ★ LAYER POPUP — RISING FROM THE DEEP
            ───────────────────────────────────────────── */
         #detail-modal {
-            position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+            position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+            opacity:0;visibility:hidden;
+            transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),visibility 0.6s;
         }
-        #detail-modal.active { opacity: 1; visibility: visible; }
-        .modal-overlay {
-            position: absolute; inset: 0;
-            background: rgba(8,18,38,0.18);
-            backdrop-filter: blur(16px) brightness(1.08) saturate(1.4);
-            -webkit-backdrop-filter: blur(16px) brightness(1.08) saturate(1.4);
-            opacity: 0; transition: opacity 0.7s ease;
+        #detail-modal.active{opacity:1;visibility:visible;}
+        .modal-overlay{
+            position:absolute;inset:0;
+            background:rgba(8,18,38,0.18);
+            backdrop-filter:blur(16px) brightness(1.08) saturate(1.4);
+            -webkit-backdrop-filter:blur(16px) brightness(1.08) saturate(1.4);
+            opacity:0;transition:opacity 0.7s ease;
         }
-        #detail-modal.active .modal-overlay { opacity: 1; }
-        .modal-content {
-            position: relative; z-index: 10;
-            width: 92%; height: 90%;
-            background: linear-gradient(160deg,rgba(255,255,255,0.72) 0%,rgba(248,252,255,0.58) 40%,rgba(240,248,255,0.48) 100%);
-            backdrop-filter: blur(60px) saturate(200%) brightness(1.1);
-            -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(1.1);
-            border: 1px solid rgba(255,255,255,0.9);
-            border-top: 2px solid rgba(255,255,255,1);
-            border-radius: 44px;
+        #detail-modal.active .modal-overlay{opacity:1;}
+        .modal-content{
+            position:relative;z-index:10;width:92%;height:90%;
+            background:linear-gradient(160deg,rgba(255,255,255,0.72) 0%,rgba(248,252,255,0.58) 40%,rgba(240,248,255,0.48) 100%);
+            backdrop-filter:blur(60px) saturate(200%) brightness(1.1);
+            -webkit-backdrop-filter:blur(60px) saturate(200%) brightness(1.1);
+            border:1px solid rgba(255,255,255,0.9);border-top:2px solid rgba(255,255,255,1);
+            border-radius:44px;
             box-shadow:
                 0 -1px 0 rgba(255,255,255,1),
                 0 8px 32px -8px rgba(255,255,255,0.5),
@@ -197,29 +194,29 @@
                 0 80px 120px -40px rgba(15,23,42,0.15),
                 inset 0 1px 0 rgba(255,255,255,1),
                 inset 0 0 80px rgba(255,255,255,0.12);
-            overflow: hidden;
-            transform: translateY(80px) scale(0.94);
-            opacity: 0;
-            transition: transform 0.9s cubic-bezier(0.16,1,0.3,1), opacity 0.7s cubic-bezier(0.16,1,0.3,1);
+            overflow:hidden;
+            transform:translateY(80px) scale(0.94);opacity:0;
+            transition:transform 0.9s cubic-bezier(0.16,1,0.3,1),opacity 0.7s cubic-bezier(0.16,1,0.3,1);
         }
-        #detail-modal.active .modal-content { transform: translateY(0) scale(1); opacity: 1; }
-        #detail-modal.closing .modal-content { transform: translateY(60px) scale(0.95); opacity: 0; transition: transform 0.5s cubic-bezier(0.4,0,1,1), opacity 0.4s ease; }
-        .modal-content::before {
-            content:""; position:absolute; inset:0; pointer-events:none; z-index:15;
-            background: linear-gradient(160deg,rgba(255,255,255,0.55) 0%,rgba(255,255,255,0.1) 25%,transparent 50%),linear-gradient(to bottom,rgba(255,255,255,0.3) 0%,transparent 8%);
+        #detail-modal.active .modal-content{transform:translateY(0) scale(1);opacity:1;}
+        #detail-modal.closing .modal-content{transform:translateY(60px) scale(0.95);opacity:0;transition:transform 0.5s cubic-bezier(0.4,0,1,1),opacity 0.4s ease;}
+        .modal-content::before{
+            content:"";position:absolute;inset:0;pointer-events:none;z-index:15;
+            background:linear-gradient(160deg,rgba(255,255,255,0.55) 0%,rgba(255,255,255,0.1) 25%,transparent 50%),
+                       linear-gradient(to bottom,rgba(255,255,255,0.3) 0%,transparent 8%);
             border-radius:inherit;
         }
-        .modal-close {
-            position:absolute; top:28px; right:28px; z-index:20;
-            width:48px; height:48px; border-radius:50%;
-            background:rgba(255,255,255,0.85); border:1px solid rgba(255,255,255,1);
-            display:flex; align-items:center; justify-content:center;
-            cursor:pointer; transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+        .modal-close{
+            position:absolute;top:28px;right:28px;z-index:20;
+            width:48px;height:48px;border-radius:50%;
+            background:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,1);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
             box-shadow:0 8px 20px rgba(0,0,0,0.1),inset 0 1px 0 rgba(255,255,255,1);
         }
-        .modal-close:hover { background:#ffffff; transform:scale(1.12) rotate(90deg); box-shadow:0 16px 32px rgba(0,0,0,0.15); }
-        .iframe-wrapper { width:100%; height:100%; position:relative; }
-        #detail-iframe { width:100%; height:100%; border:none; background:transparent; }
+        .modal-close:hover{background:#fff;transform:scale(1.12) rotate(90deg);box-shadow:0 16px 32px rgba(0,0,0,0.15);}
+        .iframe-wrapper{width:100%;height:100%;position:relative;}
+        #detail-iframe{width:100%;height:100%;border:none;background:transparent;}
     </style>
 </head>
 <body>
@@ -283,7 +280,7 @@
                 <div class="cat-box seam">
                     <div class="cat-header"><span class="cat-txt">Projects</span><span class="section-ko">사업관리</span></div>
                     <div class="app-grid">
-                        <button class="app-btn"><div class="orb-box"><span class="material-symbols-outlined">stacked_line_chart</span></div><div class="lbl">진도</div></button>
+                        <button class="app-btn" onclick="location.href='progress_manage.html'"><div class="orb-box"><span class="material-symbols-outlined">stacked_line_chart</span></div><div class="lbl">진도</div></button>
                         <button class="app-btn"><div class="orb-box"><span class="material-symbols-outlined">warning_amber</span></div><div class="lbl">이슈</div></button>
                         <button class="app-btn"><div class="orb-box"><span class="material-symbols-outlined">crisis_alert</span></div><div class="lbl">리스크</div></button>
                         <button class="app-btn"><div class="orb-box"><span class="material-symbols-outlined">trophy</span></div><div class="lbl">성과</div></button>
@@ -323,23 +320,34 @@ Mark 1.1 · Liquid Illusion · Internal Preview
 </div>
 
 <script>
-    const API = 'https://script.google.com/macros/s/AKfycbzl-Rk6Um-qsYLJjPX6BgJf3Ka2j7uyFALWpFykRafSM8KjHmloPtc6Bjw7C7jkCfBEhA/exec';
+    const API = 'https://script.google.com/macros/s/AKfycbyu5hh4fqswIE-SpQ_2v7mlLJRL61bBsLmTtP83uzO9kMY1rGRd-Tdu22nsXBgMIK7V5g/exec';
     const container = document.getElementById('project-container');
+
+    function jsonp(url) {
+        return new Promise((resolve, reject) => {
+            const cb = 'cb_' + Date.now();
+            const s = document.createElement('script');
+            window[cb] = data => { resolve(data); delete window[cb]; s.remove(); };
+            s.onerror = () => { reject(new Error('JSONP failed')); delete window[cb]; s.remove(); };
+            s.src = url + '&callback=' + cb;
+            document.head.appendChild(s);
+        });
+    }
 
     async function loadProjects() {
         container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;opacity:0.4;font-size:13px;font-weight:700;letter-spacing:.1em;">LOADING ···</div>`;
         try {
-            const res = await fetch(API + '?action=read');
-            const { projects } = await res.json();
-            const sorted = [...projects].sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
+            const data = await jsonp(API + '?action=read');
+            const sorted = (data.projects || []).sort((a,b) => (Number(a.order)||0) - (Number(b.order)||0));
             container.innerHTML = '';
             sorted.forEach(p => {
                 let dotClass = 'dot-none';
                 if (p.status === 'crit') dotClass = 'dot-red';
                 if (p.status === 'warn') dotClass = 'dot-amber';
                 const pct = Number(p.pct) || 0;
+                const safeUrl = (p.sheet_url || '').replace(/'/g, "\\'");
                 container.innerHTML += `
-                    <div class="pool" onclick="openDetail('${p.id}','${(p.sheet_url||'').replace(/'/g,"\\'")}')">
+                    <div class="pool" onclick="openDetail('${p.id}','${safeUrl}')">
                         <div class="glass-tooltip">[${p.team}] ${p.full_name}</div>
                         <div class="liquid" style="width:${pct}%"></div>
                         <div class="floating-layer">
