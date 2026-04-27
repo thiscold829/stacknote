@@ -42,16 +42,13 @@ main,nav,footer{position:relative;z-index:1;}
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;box-shadow:0 20px 40px rgba(15,23,42,0.3);white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* 모달 기본 스타일 */
 .mbg{position:fixed;inset:0;background:rgba(15,23,42,0.15);backdrop-filter:blur(12px);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s ease;}
 .mbg.open{opacity:1;visibility:visible;}
 .mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.95) 0%,rgba(248,250,252,0.9) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
 .mbg.open .mbox{transform:translateY(0);}
 
-/* 경고 특화 모달 스타일 */
 .mbox-danger { border-top: 4px solid #ef4444; }
 .mtitle-danger { color: #991b1b; display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
-
 .mtitle{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;margin-bottom:24px;}
 .field{margin-bottom:16px;}.field label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
 .sdot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
@@ -146,14 +143,12 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
 <div class="toast" id="toast"></div>
 
 <script>
-// API 연동 세팅
+// 배포된 Apps Script 웹 앱 URL (유지)
 const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
-// 진도관리 시트는 첫 번째 탭이므로 gid=0 을 가리킴
 const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
 const API='https://script.google.com/macros/s/AKfycbz_RRZrnYG7lPT67musJP_AWS2x71bPA__meElbwAnbJmmYTVHvlGvkvuoRV-lGzzn9Qg/exec';
 
-let projects=[], dragSrc=null;
-let pendingDelIdx = -1; // 삭제 대기 중인 항목 인덱스
+let projects=[], dragSrc=null, pendingDelIdx = -1;
 
 const SL={ok:'정상',warn:'주의',crit:'긴급',done:'완료',idle:'미시작'};
 const SC={ok:'b-ok',warn:'b-warn',crit:'b-crit',done:'b-done',idle:'b-idle'};
@@ -213,16 +208,7 @@ function render(){
 
 function ds(e,i){dragSrc=i;e.currentTarget.classList.add('dragging');}
 function dov(e,i){e.preventDefault();document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('drag-over'));if(i!==dragSrc)e.currentTarget.classList.add('drag-over');}
-
-// 순서 변경 시 자동 저장
-function dp(e,i){
-  e.preventDefault();
-  if(dragSrc===null||dragSrc===i)return;
-  const m=projects.splice(dragSrc,1)[0];
-  projects.splice(i,0,m);
-  render();
-  saveAll();
-}
+function dp(e,i){ e.preventDefault(); if(dragSrc===null||dragSrc===i)return; const m=projects.splice(dragSrc,1)[0]; projects.splice(i,0,m); render(); saveAll(); }
 function de(){document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('dragging','drag-over'));dragSrc=null;}
 
 function openAdd(){
@@ -249,7 +235,6 @@ function openEdit(i){
 }
 function closeModal(){document.getElementById('emodal').classList.remove('open');}
 
-// 추가/수정 후 자동 저장
 function saveModal(){
   const idx=Number(document.getElementById('eidx').value);
   const o={
@@ -262,70 +247,41 @@ function saveModal(){
     order:idx===-1?projects.length+1:(projects[idx].order||idx+1)
   };
   if(!o.id||!o.full_name){showToast('약어와 풀네임 필수');return;}
-  
   if(!confirm(`입력하신 정보가 DB에 반영됩니다.\n계속하시겠습니까?`)) return;
 
   if(idx===-1)projects.push(o);else projects[idx]={...projects[idx],...o};
-  render();
-  closeModal();
-  saveAll();
+  render(); closeModal(); saveAll();
 }
 
-// ─── 2중 경고 삭제 로직 시작 ───
 function initDel(i) {
-  // 1차 경고: 브라우저 기본 Confirm
   if(!confirm(`"${projects[i].id}" 항목을 정말 삭제하시겠습니까?`)) return;
-  
-  // 2차 경고: 레이어 팝업 띄우기
   pendingDelIdx = i;
   document.getElementById('delMsg').textContent = `[${projects[i].id}] ${projects[i].full_name}`;
   document.getElementById('delModal').classList.add('open');
 }
-
-function closeDelModal() {
-  document.getElementById('delModal').classList.remove('open');
-  pendingDelIdx = -1;
-}
-
+function closeDelModal() { document.getElementById('delModal').classList.remove('open'); pendingDelIdx = -1; }
 function confirmDel() {
-  if (pendingDelIdx > -1) {
-    projects.splice(pendingDelIdx, 1);
-    render();
-    saveAll();
-    closeDelModal();
-  }
+  if (pendingDelIdx > -1) { projects.splice(pendingDelIdx, 1); render(); saveAll(); closeDelModal(); }
 }
-// ─── 2중 경고 삭제 로직 끝 ───
 
-// ─── 구글 시트 저장 핵심 통신 모듈 ───
 function saveAll(){
   setSS('loading','저장 중...');
+  const payloadObj = { action: 'write', projects: projects.map((p,i)=>({...p,order:i+1})) };
   
-  // 백엔드의 'progress_manage' 시트에 맞춘 write 액션 전송
-  const payloadObj = {
-    action: 'write',
-    projects: projects.map((p,i)=>({...p,order:i+1}))
-  };
-  
-  // 브라우저 튕김 현상을 막는 Form-urlencoded POST 방식
   fetch(API, {
     method: 'POST',
     mode: 'no-cors',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ payload: JSON.stringify(payloadObj) })
   }).then(() => {
-    setSS('ok','저장 완료');
-    showToast('DB에 안전하게 동기화되었습니다');
+    setSS('ok','저장 완료'); showToast('DB에 안전하게 동기화되었습니다');
   }).catch((error) => {
-    setSS('err','저장 실패');
-    showToast('저장에 실패했습니다.');
+    setSS('err','저장 실패'); showToast('저장에 실패했습니다.');
   });
 }
 
 function setSS(s,t){document.getElementById('sdot').className='sdot '+s;document.getElementById('stxt').textContent=t;}
 let tt;
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);}
-
 loadData();
 </script>
 </body>
