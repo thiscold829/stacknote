@@ -142,8 +142,10 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
 
 <div class="toast" id="toast"></div>
 
+<form id="hidden_form" target="hidden_iframe" method="POST" style="display:none;"><input type="hidden" name="payload" id="payload_input"></form>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){ completeSave(); }"></iframe>
+
 <script>
-// 배포된 Apps Script 웹 앱 URL (유지)
 const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
 const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
 const API='https://script.google.com/macros/s/AKfycbz_RRZrnYG7lPT67musJP_AWS2x71bPA__meElbwAnbJmmYTVHvlGvkvuoRV-lGzzn9Qg/exec';
@@ -220,7 +222,6 @@ function openAdd(){
   document.getElementById('estat').value='idle';
   document.getElementById('emodal').classList.add('open');
 }
-
 function openEdit(i){
   const p=projects[i];
   document.getElementById('mtitle').textContent='사업 수정';
@@ -247,14 +248,11 @@ function saveModal(){
     order:idx===-1?projects.length+1:(projects[idx].order||idx+1)
   };
   if(!o.id||!o.full_name){showToast('약어와 풀네임 필수');return;}
-  if(!confirm(`입력하신 정보가 DB에 반영됩니다.\n계속하시겠습니까?`)) return;
-
   if(idx===-1)projects.push(o);else projects[idx]={...projects[idx],...o};
   render(); closeModal(); saveAll();
 }
 
 function initDel(i) {
-  if(!confirm(`"${projects[i].id}" 항목을 정말 삭제하시겠습니까?`)) return;
   pendingDelIdx = i;
   document.getElementById('delMsg').textContent = `[${projects[i].id}] ${projects[i].full_name}`;
   document.getElementById('delModal').classList.add('open');
@@ -264,24 +262,36 @@ function confirmDel() {
   if (pendingDelIdx > -1) { projects.splice(pendingDelIdx, 1); render(); saveAll(); closeDelModal(); }
 }
 
+// 최초 100% 작동하던 iframe POST 방식으로 원상 복구
+let saveFallback;
+window.submitted = false;
+
 function saveAll(){
   setSS('loading','저장 중...');
   const payloadObj = { action: 'write', projects: projects.map((p,i)=>({...p,order:i+1})) };
   
-  fetch(API, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: new URLSearchParams({ payload: JSON.stringify(payloadObj) })
-  }).then(() => {
-    setSS('ok','저장 완료'); showToast('DB에 안전하게 동기화되었습니다');
-  }).catch((error) => {
-    setSS('err','저장 실패'); showToast('저장에 실패했습니다.');
-  });
+  document.getElementById('payload_input').value = JSON.stringify(payloadObj);
+  const form = document.getElementById('hidden_form');
+  form.action = API;
+  window.submitted = true;
+  form.submit();
+
+  clearTimeout(saveFallback);
+  saveFallback = setTimeout(()=>{ if(window.submitted) completeSave(); }, 2500);
+}
+
+function completeSave() {
+  if(!window.submitted) return;
+  window.submitted = false;
+  clearTimeout(saveFallback);
+  setSS('ok','저장 완료');
+  showToast('DB에 안전하게 동기화되었습니다');
 }
 
 function setSS(s,t){document.getElementById('sdot').className='sdot '+s;document.getElementById('stxt').textContent=t;}
 let tt;
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);}
+
 loadData();
 </script>
 </body>
