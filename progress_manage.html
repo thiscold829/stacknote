@@ -8,8 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD@100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css"/>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-:root{--ink:#000;--ink-soft:#1e293b;--ink-mute:#94a3b8;}
+#login-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,rgba(241,245,249,0.97),rgba(226,232,240,0.97));backdrop-filter:blur(20px);}
+.login-box{background:linear-gradient(160deg,rgba(255,255,255,0.95),rgba(248,250,252,0.9));border:1px solid rgba(255,255,255,1);border-radius:32px;padding:52px 56px;text-align:center;box-shadow:0 40px 80px -20px rgba(15,23,42,0.2);max-width:400px;width:90%;}
+.login-err{font-size:12px;font-weight:700;color:#ef4444;margin-top:16px;display:none;}
+</style>
 html,body{height:100%;}
 body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;background:radial-gradient(1000px 800px at 5% 5%,#fff,transparent 65%),radial-gradient(1200px 900px at 95% 95%,#cbd5e1,transparent 65%),linear-gradient(180deg,#f1f5f9 0%,#e2e8f0 100%);background-attachment:fixed;}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.07  0 0 0 0 0.012 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");mix-blend-mode:multiply;opacity:.35;}
@@ -56,6 +60,17 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
 </style>
 </head>
 <body>
+<div id="login-overlay">
+  <div class="login-box">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="16.5" width="18" height="3" rx="1" fill="#000"/><rect x="3" y="10.5" width="14" height="3" rx="1" fill="#64748b"/><rect x="3" y="4.5" width="10" height="3" rx="1" fill="#cbd5e1"/></svg>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.05em;">Stack<span style="color:#94a3b8;font-weight:600;">Note</span></span>
+    </div>
+    <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:28px;">Google 계정으로 로그인해주세요</div>
+    <div id="g_id_signin2"></div>
+    <div class="login-err" id="login-err2">허용되지 않은 계정입니다.</div>
+  </div>
+</div>
 <nav class="fixed top-0 left-0 right-0 z-50 nav">
   <div class="flex justify-between items-center px-10 py-3 w-full max-w-[1920px] mx-auto">
     <div class="flex items-center gap-6">
@@ -138,16 +153,33 @@ footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:cente
 
 <div class="toast" id="toast"></div>
 
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){ completeSave(); }"></iframe>
-<form id="hidden_form" target="hidden_iframe" method="POST" style="display:none;">
-  <input type="hidden" name="payload" id="payload_input">
-</form>
-
 <script>
-// 🚨 만약 앱스스크립트 '새 배포' 후 URL이 바뀌었다면 여기를 꼭 수정해주세요!
+const CLIENT_ID='274362597874-ju1ja447e0ovguvbsel8200grjqv6bvo.apps.googleusercontent.com';
 const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
-const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
-const API='https://script.google.com/macros/s/AKfycbz_RRZrnYG7lPT67musJP_AWS2x71bPA__meElbwAnbJmmYTVHvlGvkvuoRV-lGzzn9Qg/exec';
+const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1`;
+const API='https://script.google.com/macros/s/AKfycbxpLtJ7KLA_22De8qvph9TJwcwh76H_5_loqfOlE_wOooaDVjUi94CONwMcxh-k13ed6Q/exec';
+let idToken=null;
+
+window.onload=()=>{
+  const t=sessionStorage.getItem('sn_token'),u=sessionStorage.getItem('sn_user');
+  if(t&&u){idToken=t;document.getElementById('login-overlay').style.display='none';loadData();}
+  else{
+    google.accounts.id.initialize({client_id:CLIENT_ID,callback:handleCredential});
+    google.accounts.id.renderButton(document.getElementById('g_id_signin2'),{theme:'outline',size:'large',width:280});
+  }
+};
+async function handleCredential(resp){
+  idToken=resp.credential;
+  try{
+    const res=await fetch(API+'?action=verify&token='+encodeURIComponent(idToken));
+    const data=await res.json();
+    if(!data.ok){document.getElementById('login-err2').style.display='block';return;}
+    sessionStorage.setItem('sn_token',idToken);
+    sessionStorage.setItem('sn_user',JSON.stringify(data.user));
+    document.getElementById('login-overlay').style.display='none';
+    loadData();
+  }catch(e){document.getElementById('login-err2').textContent='서버 오류';document.getElementById('login-err2').style.display='block';}
+}
 
 let projects=[], dragSrc=null, pendingDelIdx = -1;
 const SL={ok:'정상',warn:'주의',crit:'긴급',done:'완료',idle:'미시작'};
@@ -286,37 +318,12 @@ function confirmDel() {
   }
 }
 
-// 🚨 백엔드(GAS)로 데이터 쏘는 통신 모듈 🚨
-window.submitted = false;
-let saveFallback;
-
-function saveAll(){
+async function saveAll(){
   setSS('loading','저장 중...');
-  
-  const payloadObj = { 
-    action: 'write', 
-    projects: projects.map((p,i)=>({...p,order:i+1})) 
-  };
-  
-  // 폼에 데이터 입력
-  document.getElementById('payload_input').value = JSON.stringify(payloadObj);
-  const form = document.getElementById('hidden_form');
-  form.action = API;
-  
-  window.submitted = true;
-  form.submit(); // 리다이렉트 무시하고 통신
-
-  // 2.5초 후 화면에 완료 표시
-  clearTimeout(saveFallback);
-  saveFallback = setTimeout(()=>{ if(window.submitted) completeSave(); }, 2500);
-}
-
-function completeSave() {
-  if(!window.submitted) return;
-  window.submitted = false;
-  clearTimeout(saveFallback);
-  setSS('ok','저장 완료');
-  showToast('DB에 안전하게 동기화되었습니다');
+  try{
+    await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'writeProjects',token:idToken,projects:projects.map((p,i)=>({...p,order:i+1}))})});
+    setSS('ok','저장 완료');showToast('DB에 동기화됐습니다');
+  }catch(e){setSS('err','저장 실패');showToast('저장 실패');}
 }
 
 function setSS(s,t){document.getElementById('sdot').className='sdot '+s;document.getElementById('stxt').textContent=t;}
