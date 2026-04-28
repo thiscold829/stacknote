@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>일일보고 — StackNote</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD@100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css"/>
@@ -15,67 +16,69 @@ body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);-webkit-
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.07  0 0 0 0 0.012 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");mix-blend-mode:multiply;opacity:.35;}
 main,nav,footer{position:relative;z-index:1;}
 .ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;display:inline-block;}
-.nav{background:rgba(255,255,255,0.85);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-bottom:1px solid rgba(255,255,255,1);}
+.nav{background:rgba(255,255,255,0.85);backdrop-filter:blur(40px) saturate(180%);border-bottom:1px solid rgba(255,255,255,1);}
 .brand{font-family:'Space Grotesk',sans-serif;font-weight:800;letter-spacing:-0.05em;font-size:20px;color:var(--ink);}
-.stitle{font-family:'Space Grotesk',sans-serif;font-weight:800;letter-spacing:-0.03em;color:var(--ink);font-size:19px;text-transform:uppercase;}
-.sko{font-size:13px;font-weight:700;color:var(--ink-mute);margin-left:10px;}
-
-.workspace { max-width: 1600px; margin: 0 auto; width: 100%; padding: 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; flex: 1; align-items: start; }
-@media (max-width: 1024px) { .workspace { grid-template-columns: 1fr; } }
-
-.island{background:linear-gradient(180deg,rgba(255,255,255,0.7) 0%,rgba(248,250,252,0.4) 100%);border:1px solid rgba(255,255,255,0.8);border-top:1px solid rgba(255,255,255,1);border-radius:24px;box-shadow:0 20px 50px -20px rgba(15,23,42,0.12);backdrop-filter:blur(48px) saturate(180%);-webkit-backdrop-filter:blur(48px) saturate(180%);padding:28px 32px;}
-
-.input-group { display: flex; gap: 12px; margin-bottom: 24px; }
-.inp-base { background:rgba(255,255,255,0.9); border:1px solid rgba(15,23,42,0.1); border-radius:12px; padding:10px 14px; font-size:14px; font-weight:600; color:var(--ink); outline:none; transition:all 0.2s; box-shadow:inset 0 1px 2px rgba(0,0,0,0.02); }
-.inp-base:focus { border-color:rgba(99,102,241,0.5); box-shadow:0 0 0 3px rgba(99,102,241,0.1); }
-.inp-user { width: 100px; }
-.inp-date { width: 140px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
-
-.worklog-bar { display: flex; align-items: center; background: rgba(255,255,255,0.85); border: 1px solid rgba(15,23,42,0.1); border-radius: 16px; padding: 6px; box-shadow: 0 8px 20px -8px rgba(0,0,0,0.05); }
-.worklog-bar:focus-within { border-color: rgba(99,102,241,0.5); box-shadow: 0 8px 24px -8px rgba(99,102,241,0.2); }
-.wl-inp { border: none; background: transparent; padding: 12px 16px; font-size: 14px; font-weight: 600; outline: none; }
-.wl-biz { width: 160px; border-right: 1px solid rgba(15,23,42,0.06); }
-.wl-task { flex: 1.5; border-right: 1px solid rgba(15,23,42,0.06); }
-.wl-rel { flex: 1; }
-
+.island{background:linear-gradient(180deg,rgba(255,255,255,0.7) 0%,rgba(248,250,252,0.4) 100%);border:1px solid rgba(255,255,255,0.8);border-top:1px solid rgba(255,255,255,1);border-radius:24px;box-shadow:0 20px 50px -20px rgba(15,23,42,0.12);backdrop-filter:blur(48px) saturate(180%);padding:28px 32px;}
+.inp{width:100%;background:rgba(255,255,255,0.85);border:1px solid rgba(15,23,42,0.1);border-radius:10px;padding:10px 14px;font-size:14px;font-weight:500;color:var(--ink);outline:none;transition:border-color .2s;font-family:'Pretendard',sans-serif;}
+.inp:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
+textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
+.label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:7px;}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;border:none;outline:none;}
 .bp{background:#0b1220;color:#fff;box-shadow:0 4px 12px rgba(15,23,42,0.2);}.bp:hover{background:#1e293b;transform:translateY(-1px);}
 .bg2{background:rgba(255,255,255,0.7);color:var(--ink-soft);border:1px solid rgba(15,23,42,0.1);}.bg2:hover{background:#fff;}
-.bd{background:rgba(254,242,242,0.9);color:#991b1b;border:1px solid rgba(252,165,165,0.4);}.bd:hover{background:#fef2f2;}
+.bd{background:rgba(254,242,242,0.9);color:#991b1b;border:1px solid rgba(252,165,165,0.4);}
 .bsm{padding:5px 12px;font-size:11px;}
-.btn-add { background: #0b1220; color: #fff; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(15,23,42,0.15); flex-shrink: 0; }
-.btn-add:hover { transform: translateY(-1px); background: #1e293b; }
-
-.task-list { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; min-height: 200px; max-height: 500px; overflow-y: auto; padding-right: 4px; }
-.task-list::-webkit-scrollbar { width: 6px; }
-.task-list::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.1); border-radius: 99px; }
-.task-item { background: rgba(255,255,255,0.6); border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; transition: all 0.2s; }
-.task-item:hover { background: rgba(255,255,255,0.9); border-color: rgba(15,23,42,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-.badge-biz { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 800; color: #475569; background: #f1f5f9; padding: 6px 12px; border-radius: 8px; letter-spacing: 0.05em; }
-.task-text { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.4; }
-.task-rel { font-size: 13px; font-weight: 700; color: #4f46e5; background: #e0e7ff; padding: 4px 10px; border-radius: 8px; }
-.task-time { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--ink-mute); font-weight: 600; width: 50px; text-align: center; }
-
-.result-box { background: rgba(255,255,255,0.8); border: 1px solid rgba(15,23,42,0.1); border-radius: 16px; padding: 24px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.6; color: var(--ink-soft); min-height: 400px; white-space: pre-wrap; outline: none; }
-.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-
-.sdot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
-.sdot.ok{background:#34d399;}.sdot.loading{background:#fbbf24;animation:pulse 1s infinite;}.sdot.err{background:#f87171;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;box-shadow:0 20px 40px rgba(15,23,42,0.3);white-space:nowrap;}
+.stitle{font-family:'Space Grotesk',sans-serif;font-weight:800;letter-spacing:-0.03em;color:var(--ink);font-size:18px;text-transform:uppercase;}
+.sko{font-size:13px;font-weight:700;color:var(--ink-mute);margin-left:10px;}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-footer{font-size:11px;color:var(--ink-mute);padding:0 0 24px;text-align:center;font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.6;}
+footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:center;font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.6;}
 
+/* 로그인 오버레이 */
+#login-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,rgba(241,245,249,0.97),rgba(226,232,240,0.97));backdrop-filter:blur(20px);}
+.login-box{background:linear-gradient(160deg,rgba(255,255,255,0.95),rgba(248,250,252,0.9));border:1px solid rgba(255,255,255,1);border-radius:32px;padding:52px 56px;text-align:center;box-shadow:0 40px 80px -20px rgba(15,23,42,0.2);max-width:400px;width:90%;}
+.login-err{font-size:12px;font-weight:700;color:#ef4444;margin-top:16px;display:none;}
+
+/* 자동완성 */
+.autocomplete-wrap{position:relative;}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid rgba(15,23,42,0.1);border-radius:10px;box-shadow:0 20px 40px -12px rgba(15,23,42,0.2);max-height:200px;overflow-y:auto;display:none;}
+.autocomplete-list.open{display:block;}
+.ac-item{padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:background .1s;}
+.ac-item:hover,.ac-item.selected{background:rgba(99,102,241,0.07);}
+.ac-id{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:12px;color:#475569;margin-right:8px;}
+
+/* 로그 카드 */
+.log-card{background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.06);border-radius:14px;padding:16px 18px;transition:all .2s;}
+.log-card:hover{background:#fff;box-shadow:0 4px 16px -4px rgba(15,23,42,0.1);}
+.log-project{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:800;background:#f1f5f9;color:#475569;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;}
+.log-content{font-size:13px;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:6px;}
+.log-relation{font-size:12px;color:var(--ink-mute);font-weight:500;}
+.log-meta{font-size:11px;color:#cbd5e1;font-weight:600;margin-top:6px;}
+
+/* 편집 모달 */
 .mbg{position:fixed;inset:0;background:rgba(15,23,42,0.15);backdrop-filter:blur(12px);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s ease;}
 .mbg.open{opacity:1;visibility:visible;}
-.mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.95) 0%,rgba(248,250,252,0.9) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
+.mbox{width:540px;background:linear-gradient(160deg,rgba(255,255,255,0.95),rgba(248,250,252,0.9));border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25);backdrop-filter:blur(40px);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
 .mbg.open .mbox{transform:translateY(0);}
-.field{margin-bottom:16px;}.field label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
-.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:10px 12px;font-size:13px;font-weight:600;color:var(--ink);outline:none; transition:border-color .2s;}
-.inp:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
+.mtitle{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;letter-spacing:-0.03em;margin-bottom:24px;}
+.field{margin-bottom:16px;}
 </style>
 </head>
 <body>
+
+<!-- 로그인 오버레이 -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="16.5" width="18" height="3" rx="1" fill="#000"/><rect x="3" y="10.5" width="14" height="3" rx="1" fill="#64748b"/><rect x="3" y="4.5" width="10" height="3" rx="1" fill="#cbd5e1"/></svg>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.05em;">Stack<span style="color:#94a3b8;font-weight:600;">Note</span></span>
+    </div>
+    <div style="font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:28px;">Google 계정으로 로그인해주세요</div>
+    <div id="g_id_signin_wl"></div>
+    <div class="login-err" id="login-err-wl">허용되지 않은 계정입니다.</div>
+  </div>
+</div>
 
 <nav class="fixed top-0 left-0 right-0 z-50 nav">
   <div class="flex justify-between items-center px-10 py-3 w-full max-w-[1920px] mx-auto">
@@ -87,308 +90,244 @@ footer{font-size:11px;color:var(--ink-mute);padding:0 0 24px;text-align:center;f
       <span class="text-[11px] font-black text-slate-400 tracking-[.2em] uppercase">/ 일일보고</span>
     </div>
     <div class="flex items-center gap-3">
-      <span class="flex items-center gap-2 text-[11px] font-bold text-slate-400 mr-2">
-        <span class="sdot loading" id="sdot"></span><span id="stxt">DB 연결 중...</span>
-      </span>
-      <button class="btn bg2 bsm" onclick="location.href='index.html'"><span class="ms" style="font-size:14px;">home</span>메인으로</button>
-      <button class="btn bg2 bsm" onclick="loadData()"><span class="ms" style="font-size:14px;">sync</span>DB 동기화</button>
-      <button class="btn bp" onclick="saveAll()"><span class="ms" style="font-size:14px;">cloud_upload</span>수동 저장</button>
+      <span id="user-badge" class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white/80 text-[11px] font-black text-slate-700 uppercase"></span>
+      <button class="btn bg2 bsm" onclick="location.href='index.html'"><span class="ms" style="font-size:14px;">home</span>메인</button>
     </div>
   </div>
 </nav>
 
-<main class="pt-[100px] pb-10 w-full max-w-[1920px] mx-auto flex-1">
-  <div class="workspace">
-    <section>
-      <div class="flex items-baseline justify-between mb-6 px-1">
-        <div><h2 class="stitle" style="display:inline;">Worklog Studio</h2><span class="sko">업무일지 생성기</span></div>
-        <button class="btn bd bsm" onclick="clearLogs()"><span class="ms" style="font-size:14px;">delete_sweep</span>화면 초기화</button>
+<main class="pt-[100px] px-10 pb-10 w-full max-w-[1920px] mx-auto flex-1">
+  <div class="grid grid-cols-1 xl:grid-cols-5 gap-8 mt-4">
+
+    <!-- 입력 패널 -->
+    <div class="xl:col-span-2">
+      <div class="flex items-baseline mb-5 px-1">
+        <h2 class="stitle" style="display:inline;">일일보고 입력</h2>
       </div>
-      
       <div class="island">
-        <div class="input-group">
-          <input type="text" id="inpUser" class="inp-base inp-user" value="이찬" placeholder="작성자">
-          <input type="date" id="inpDate" class="inp-base inp-date" onchange="filterLogsByDate()">
+        <div class="field">
+          <label class="label">날짜</label>
+          <input class="inp" id="w-date" type="date"/>
         </div>
-
-        <div class="worklog-bar">
-          <input list="bizList" id="inBiz" class="wl-inp wl-biz" placeholder="사업명 (약어)" autocomplete="off">
-          <datalist id="bizList"></datalist>
-          
-          <input id="inTask" class="wl-inp wl-task" type="text" placeholder="수행 업무 (예: 인계, 공유, 작성 등)" autocomplete="off">
-          <input id="inDetails" class="wl-inp wl-rel" type="text" placeholder="관계 (예: w장t,1k)" autocomplete="off">
-          <button class="btn-add" onclick="addLog()" title="추가 (Enter)">
-            <span class="ms" style="font-size:20px; font-weight: 600;">add</span>
-          </button>
-        </div>
-
-        <div class="task-list" id="logList">
-          <div style="text-align:center;padding:40px;opacity:0.4;font-size:13px;font-weight:700;">LOADING ···</div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="flex items-baseline mb-6 px-1">
-        <h2 class="stitle">Result Output</h2><span class="sko">실시간 렌더링 결과</span>
-      </div>
-      <div class="island" style="padding: 24px;">
-        <div class="result-header">
-          <div class="text-[12px] font-black text-slate-400 tracking-[.1em] uppercase" id="outDate">YYYY-MM-DD 업무보고</div>
-          <div class="flex gap-2">
-            <button class="btn bg2 bsm" onclick="exportCSV()"><span class="ms" style="font-size:14px;">download</span>CSV 저장</button>
-            <button class="btn bp bsm" onclick="copyResult()"><span class="ms" style="font-size:14px;">content_copy</span><span id="copyText">복사하기</span></button>
+        <div class="field">
+          <label class="label">사업명 (약어 검색)</label>
+          <div class="autocomplete-wrap">
+            <input class="inp" id="w-project" placeholder="사업 약어 또는 이름 입력..." autocomplete="off" oninput="acSearch()" onkeydown="acKey(event)"/>
+            <div class="autocomplete-list" id="ac-list"></div>
           </div>
         </div>
-        <div class="result-box" id="resultBox" contenteditable="true" spellcheck="false">결과가 여기에 표시됩니다.</div>
+        <div class="field">
+          <label class="label">업무 내용</label>
+          <textarea class="inp" id="w-content" placeholder="오늘 수행한 업무를 입력하세요..."></textarea>
+        </div>
+        <div class="field">
+          <label class="label">관계 <span style="font-size:10px;font-weight:500;color:#cbd5e1;letter-spacing:0;">예) to 조은율선생님, w 장t, 1t, 위j</span></label>
+          <input class="inp" id="w-relation" placeholder="to 이름, w 이름1, 이름2"/>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button class="btn bp" onclick="submitLog()">
+            <span class="ms" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 600;">add_circle</span>보고 등록
+          </button>
+        </div>
       </div>
-    </section>
+    </div>
+
+    <!-- 내 보고 목록 -->
+    <div class="xl:col-span-3">
+      <div class="flex items-baseline justify-between mb-5 px-1">
+        <div><h2 class="stitle" style="display:inline;">내 보고 목록</h2><span class="sko" id="log-count"></span></div>
+        <button class="btn bg2 bsm" onclick="loadLogs()">
+          <span class="ms" style="font-size:14px;">sync</span>새로고침
+        </button>
+      </div>
+      <div id="log-list" class="flex flex-col gap-3">
+        <div style="text-align:center;padding:40px;opacity:0.4;font-size:13px;font-weight:700;letter-spacing:.1em;">로그인 후 불러옵니다</div>
+      </div>
+    </div>
+
   </div>
 </main>
-<footer>© 2026 StackNote · CHAN LEE · 업무일지</footer>
 
-<div class="mbg" id="emodal">
+<footer>© 2026 StackNote · CHAN LEE · 일일보고</footer>
+
+<!-- 수정 모달 -->
+<div class="mbg" id="editModal">
   <div class="mbox">
-    <div class="mtitle" style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:800; letter-spacing:-0.03em; margin-bottom:24px;">업무 수정</div>
-    <input type="hidden" id="eidx" value="-1"/>
-    
+    <div class="mtitle">보고 수정</div>
+    <input type="hidden" id="edit-id"/>
     <div class="field">
-      <label>사업명</label>
-      <input list="bizList" class="inp" id="ebiz" placeholder="사업명 선택 또는 입력">
+      <label class="label">업무 내용</label>
+      <textarea class="inp" id="edit-content" style="min-height:100px;"></textarea>
     </div>
-    <div class="field"><label>업무 내용</label><input class="inp" id="etask"></div>
-    <div class="field"><label>관계</label><input class="inp" id="erel" placeholder="예: w장t,1k"></div>
-    <div class="flex gap-3 mt-6 justify-end">
-      <button class="btn bg2" onclick="closeModal()">취소</button>
-      <button class="btn bp" onclick="saveModal()"><span class="ms" style="font-size:14px;">database</span>DB 저장</button>
+    <div class="field">
+      <label class="label">관계</label>
+      <input class="inp" id="edit-relation"/>
+    </div>
+    <div class="flex gap-3 mt-4 justify-end">
+      <button class="btn bg2" onclick="closeEdit()">취소</button>
+      <button class="btn bp" onclick="saveEdit()"><span class="ms" style="font-size:14px;">save</span>저장</button>
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// API URL 유지
-const SHEET_ID = '1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
-const API = 'https://script.google.com/macros/s/AKfycbz_RRZrnYG7lPT67musJP_AWS2x71bPA__meElbwAnbJmmYTVHvlGvkvuoRV-lGzzn9Qg/exec';
+const CLIENT_ID='274362597874-ju1ja447e0ovguvbsel8200grjqv6bvo.apps.googleusercontent.com';
+const API='https://script.google.com/macros/s/AKfycbxpLtJ7KLA_22De8qvph9TJwcwh76H_5_loqfOlE_wOooaDVjUi94CONwMcxh-k13ed6Q/exec';
+const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
+const CSV_PROGRESS='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/export?format=csv&gid=1';
+let idToken=null, currentUser=null, projects=[], acIdx=-1;
 
-const PROJECTS_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`; 
-const WORKLOG_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1311868016`;
+window.onload=()=>{
+  const t=sessionStorage.getItem('sn_token'),u=sessionStorage.getItem('sn_user');
+  if(t&&u){idToken=t;currentUser=JSON.parse(u);initPage();}
+  else{
+    google.accounts.id.initialize({client_id:CLIENT_ID,callback:handleCredential});
+    google.accounts.id.renderButton(document.getElementById('g_id_signin_wl'),{theme:'outline',size:'large',width:280});
+  }
+};
 
-let projList = [], allLogs = [], currentLogs = [];
+async function handleCredential(resp){
+  idToken=resp.credential;
+  try{
+    const res=await fetch(API+'?action=verify&token='+encodeURIComponent(idToken));
+    const data=await res.json();
+    if(!data.ok){document.getElementById('login-err-wl').style.display='block';return;}
+    currentUser=data.user;
+    sessionStorage.setItem('sn_token',idToken);
+    sessionStorage.setItem('sn_user',JSON.stringify(currentUser));
+    initPage();
+  }catch(e){document.getElementById('login-err-wl').textContent='서버 오류';document.getElementById('login-err-wl').style.display='block';}
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const d = new Date();
-  const offset = d.getTimezoneOffset() * 60000;
-  document.getElementById('inpDate').value = new Date(d - offset).toISOString().split('T')[0];
-});
+function initPage(){
+  document.getElementById('login-overlay').style.display='none';
+  document.getElementById('user-badge').textContent=currentUser.name+' · '+currentUser.role;
+  // 오늘 날짜 기본값
+  const d=new Date();
+  document.getElementById('w-date').value=d.getFullYear()+'-'+(d.getMonth()+1+'').padStart(2,'0')+'-'+(''+d.getDate()).padStart(2,'0');
+  loadProjects();
+  loadLogs();
+}
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  const hdrs = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-  const results = [];
-  for (let j = 1; j < lines.length; j++) {
-    const line = lines[j];
-    if (!line.trim()) continue;
-    const v = []; let c = '', q = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') { q = !q; } else if (ch === ',' && !q) { v.push(c.trim()); c = ''; } else { c += ch; }
-    }
+function parseCSV(t){
+  const lines=t.trim().split('\n');
+  const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line=>{
+    const v=[];let c='',q=false;
+    for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;}else if(ch===','&&!q){v.push(c.trim());c='';}else{c+=ch;}}
     v.push(c.trim());
-    const o = {}; hdrs.forEach((h, i) => o[h] = (v[i] || '').replace(/^"|"$/g, ''));
-    if (o.id) results.push(o);
-  }
-  return results;
+    const o={};hdrs.forEach((h,i)=>o[h]=(v[i]||'').replace(/^"|"$/g,''));return o;
+  }).filter(r=>r.id&&r.id!=='id');
 }
 
-async function loadData() {
-  setSS('loading', 'DB 동기화 중...');
-  try {
-    const r1 = await fetch(PROJECTS_CSV);
-    const t1 = await r1.text();
-    const projs = parseCSV(t1).sort((a,b) => (Number(a.order)||0) - (Number(b.order)||0));
-    projList = projs.map(p => p.id).filter(Boolean);
-    
-    document.getElementById('bizList').innerHTML = projList.map(p => `<option value="${p}">`).join('');
-
-    const r2 = await fetch(WORKLOG_CSV);
-    const t2 = await r2.text();
-    allLogs = parseCSV(t2);
-
-    filterLogsByDate();
-    setSS('ok', '동기화 완료');
-  } catch (e) {
-    setSS('err', '연결 실패');
-    showToast('DB 동기화에 실패했습니다.');
-  }
+async function loadProjects(){
+  try{
+    const r=await fetch(CSV_PROGRESS);
+    const txt=await r.text();
+    projects=parseCSV(txt);
+  }catch(e){}
 }
 
-function filterLogsByDate() {
-  const targetDate = document.getElementById('inpDate').value;
-  document.getElementById('outDate').textContent = `${targetDate} 업무보고`;
-  currentLogs = allLogs.filter(l => l.date === targetDate);
-  render();
+/* ── 자동완성 ── */
+function acSearch(){
+  const q=document.getElementById('w-project').value.toLowerCase().trim();
+  const list=document.getElementById('ac-list');
+  if(!q){list.classList.remove('open');return;}
+  const matched=projects.filter(p=>p.id.toLowerCase().includes(q)||p.full_name.toLowerCase().includes(q)).slice(0,8);
+  if(!matched.length){list.classList.remove('open');return;}
+  list.innerHTML=matched.map((p,i)=>`<div class="ac-item" data-id="${p.id}" data-name="${p.full_name}" onclick="acSelect('${p.id}','${p.full_name.replace(/'/g,"\\'")}')"><span class="ac-id">${p.id}</span>${p.full_name}</div>`).join('');
+  list.classList.add('open');
+  acIdx=-1;
+}
+function acSelect(id,name){
+  document.getElementById('w-project').value=id;
+  document.getElementById('w-project').dataset.selected=id;
+  document.getElementById('ac-list').classList.remove('open');
+  document.getElementById('w-content').focus();
+}
+function acKey(e){
+  const items=document.querySelectorAll('.ac-item');
+  if(!items.length)return;
+  if(e.key==='ArrowDown'){e.preventDefault();acIdx=Math.min(acIdx+1,items.length-1);}
+  else if(e.key==='ArrowUp'){e.preventDefault();acIdx=Math.max(acIdx-1,0);}
+  else if(e.key==='Enter'&&acIdx>=0){e.preventDefault();items[acIdx].click();return;}
+  else if(e.key==='Escape'){document.getElementById('ac-list').classList.remove('open');}
+  items.forEach((el,i)=>el.classList.toggle('selected',i===acIdx));
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete-wrap'))document.getElementById('ac-list').classList.remove('open');});
+
+/* ── 등록 ── */
+async function submitLog(){
+  const date=document.getElementById('w-date').value;
+  const project=document.getElementById('w-project').value.trim();
+  const content=document.getElementById('w-content').value.trim();
+  const relation=document.getElementById('w-relation').value.trim();
+  if(!date||!project||!content){showToast('날짜, 사업명, 내용은 필수입니다');return;}
+  try{
+    await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify({
+      action:'writeLog',token:idToken,
+      log:{date,employee:currentUser.name,employee_email:currentUser.email,project_id:project,content,relation}
+    })});
+    document.getElementById('w-content').value='';
+    document.getElementById('w-relation').value='';
+    document.getElementById('w-project').value='';
+    showToast('보고가 등록됐습니다');
+    setTimeout(loadLogs,1200);
+  }catch(e){showToast('등록 실패');}
 }
 
-function formatRelation(raw) {
-  if(!raw) return "";
-  let r = raw.trim();
-  r = r.replace(/^\(|\)$/g, '').trim();
-  r = r.replace(/(^|\s|,)(w|to|from)\s*/gi, (match, p1, p2) => p1 + p2.toLowerCase() + ' ');
-  r = r.replace(/\s*,\s*/g, ', ');
-  r = r.replace(/\s{2,}/g, ' ');
-  return r.length > 0 ? `(${r.trim()})` : '';
-}
-
-function addLog() {
-  const user = document.getElementById('inpUser').value.trim() || '이찬';
-  const date = document.getElementById('inpDate').value;
-  const biz = document.getElementById('inBiz').value.trim();
-  const task = document.getElementById('inTask').value.trim();
-  const rawRel = document.getElementById('inDetails').value.trim();
-
-  if(!biz || !task) { showToast('사업명과 업무내용을 입력하세요.'); document.getElementById(biz ? 'inTask' : 'inBiz').focus(); return; }
-
-  const d = new Date();
-  const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-  
-  const newLog = {
-    id: Date.now().toString(), user: user, date: date, time: time, biz: biz, task: task, relation: formatRelation(rawRel)
-  };
-
-  allLogs.push(newLog);
-  filterLogsByDate();
-  
-  document.getElementById('inTask').value = '';
-  document.getElementById('inDetails').value = '';
-  document.getElementById('inBiz').focus();
-  
-  saveAll();
-}
-
-function render() {
-  const elList = document.getElementById('logList');
-  if (currentLogs.length === 0) {
-    elList.innerHTML = `<div style="text-align:center;padding:40px;color:var(--ink-mute);font-size:13px;border:1px dashed rgba(15,23,42,0.1);border-radius:12px;">오늘 작성된 업무가 없습니다. 위에서 추가해주세요.</div>`;
-    document.getElementById('resultBox').innerText = "결과가 표시됩니다.";
-    return;
-  }
-
-  elList.innerHTML = currentLogs.map((l, i) => {
-    let relHtml = l.relation ? `<div class="task-rel">${l.relation}</div>` : '';
-    return `
-      <div class="task-item">
-        <div class="task-time">${l.time.substring(0,5)}</div>
-        <div class="badge-biz">${l.biz}</div>
-        <div class="task-text">${l.task}</div>
-        ${relHtml}
-        <div class="flex gap-2 ml-auto">
-          <button class="btn bg2 bsm" onclick="openEdit(${i})"><span class="ms" style="font-size:13px;">edit</span></button>
-          <button class="btn bd bsm" onclick="delLog(${i})"><span class="ms" style="font-size:13px;">delete</span></button>
+/* ── 목록 ── */
+async function loadLogs(){
+  if(!currentUser)return;
+  const el=document.getElementById('log-list');
+  el.innerHTML='<div style="text-align:center;padding:30px;opacity:0.4;font-size:13px;font-weight:700;">불러오는 중...</div>';
+  try{
+    const r=await fetch(API+'?action=getLogs&email='+encodeURIComponent(currentUser.email)+'&token='+encodeURIComponent(idToken));
+    const data=await r.json();
+    const logs=(data.logs||[]).sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+    document.getElementById('log-count').textContent=logs.length+'건';
+    if(!logs.length){el.innerHTML='<div style="text-align:center;padding:40px;opacity:0.4;font-size:13px;font-weight:700;">등록된 보고가 없습니다</div>';return;}
+    el.innerHTML=logs.map(l=>`
+      <div class="log-card">
+        <div class="flex items-start justify-between gap-3">
+          <div style="flex:1;">
+            <span class="log-project">${l.project_id||'—'}</span>
+            <div class="log-content">${(l.content||'').replace(/\n/g,'<br>')}</div>
+            ${l.relation?`<div class="log-relation"><span class="ms" style="font-size:12px;vertical-align:-2px;">link</span> ${l.relation}</div>`:''}
+            <div class="log-meta">${l.date||''} · ${l.employee||''}</div>
+          </div>
+          <div style="display:flex;gap:5px;flex-shrink:0;">
+            <button class="btn bg2 bsm" onclick="openEdit('${l.id}','${(l.content||'').replace(/'/g,"\\'").replace(/\n/g,'\\n')}','${(l.relation||'').replace(/'/g,"\\'")}')">
+              <span class="ms" style="font-size:13px;">edit</span>
+            </button>
+          </div>
         </div>
-      </div>
-    `;
-  }).join('');
-  
-  elList.scrollTop = elList.scrollHeight;
-  generateResultText();
+      </div>`).join('');
+  }catch(e){el.innerHTML='<div style="text-align:center;padding:30px;color:#dc2626;font-size:13px;font-weight:700;">로드 실패</div>';}
 }
 
-function generateResultText() {
-  const grouped = currentLogs.reduce((acc, log) => { 
-    if (!acc[log.biz]) acc[log.biz] = []; 
-    acc[log.biz].push(log); return acc; 
-  }, {});
-  
-  const sortedKeys = Object.keys(grouped).sort((a, b) => { 
-    let iA = projList.indexOf(a), iB = projList.indexOf(b); 
-    if (iA === -1) iA = 999; if (iB === -1) iB = 999; 
-    return iA !== iB ? iA - iB : a.localeCompare(b); 
-  });
-  
-  let res = '';
-  sortedKeys.forEach(k => { 
-    res += `[${k}]\n`; 
-    grouped[k].forEach(l => { 
-      let rel = l.relation ? ` ${l.relation}` : ''; res += `- ${l.task}${rel}\n`; 
-    }); 
-  });
-  document.getElementById('resultBox').innerText = res.trim();
+/* ── 수정 ── */
+function openEdit(id,content,relation){
+  document.getElementById('edit-id').value=id;
+  document.getElementById('edit-content').value=content.replace(/\\n/g,'\n');
+  document.getElementById('edit-relation').value=relation;
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEdit(){document.getElementById('editModal').classList.remove('open');}
+async function saveEdit(){
+  const id=document.getElementById('edit-id').value;
+  const content=document.getElementById('edit-content').value.trim();
+  const relation=document.getElementById('edit-relation').value.trim();
+  try{
+    await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'updateLog',token:idToken,log:{id,content,relation}})});
+    closeEdit();showToast('수정됐습니다');setTimeout(loadLogs,1200);
+  }catch(e){showToast('수정 실패');}
 }
 
-function openEdit(currentIdx) {
-  const log = currentLogs[currentIdx];
-  const realIdx = allLogs.findIndex(l => l.id === log.id);
-  document.getElementById('eidx').value = realIdx;
-  document.getElementById('ebiz').value = log.biz;
-  document.getElementById('etask').value = log.task;
-  document.getElementById('erel').value = log.relation.replace(/^\(|\)$/g, '');
-  document.getElementById('emodal').classList.add('open');
-}
-
-function closeModal(){ document.getElementById('emodal').classList.remove('open'); }
-
-function saveModal(){
-  const realIdx = Number(document.getElementById('eidx').value);
-  if(!confirm("수정 사항을 DB에 반영하시겠습니까?")) return;
-
-  allLogs[realIdx].biz = document.getElementById('ebiz').value.trim();
-  allLogs[realIdx].task = document.getElementById('etask').value.trim();
-  allLogs[realIdx].relation = formatRelation(document.getElementById('erel').value);
-  
-  closeModal(); filterLogsByDate(); saveAll();
-}
-
-function delLog(currentIdx) {
-  const log = currentLogs[currentIdx];
-  const realIdx = allLogs.findIndex(l => l.id === log.id);
-  if(!confirm(`[${log.biz}] ${log.task}\n이 항목을 DB에서 삭제하시겠습니까?`)) return;
-  if(!confirm(`[경고] DB 삭제 시 복구가 어렵습니다. 정말 삭제하시겠습니까?`)) return;
-  allLogs.splice(realIdx, 1); filterLogsByDate(); saveAll();
-}
-
-function clearLogs() {
-  if(!confirm("현재 화면의 내용만 비우시겠습니까? (DB 데이터는 유지됩니다)")) return;
-  document.getElementById('inpDate').value = ""; filterLogsByDate();
-}
-
-function saveAll() {
-  setSS('loading', '저장 중...');
-  const payloadObj = { action: 'write_logs', logs: allLogs };
-  fetch(API, {
-    method: 'POST', mode: 'no-cors',
-    body: new URLSearchParams({ payload: JSON.stringify(payloadObj) })
-  }).then(() => {
-    setSS('ok','저장 완료'); showToast('DB에 안전하게 동기화되었습니다');
-  }).catch((error) => {
-    setSS('err','저장 실패'); showToast('저장에 실패했습니다.');
-  });
-}
-
-function copyResult() { 
-  const t = document.getElementById('resultBox').innerText; 
-  if (!t) return; 
-  navigator.clipboard.writeText(t).then(() => { 
-    const b = document.getElementById('copyText'); b.innerText = "복사 완료!"; setTimeout(() => { b.innerText = "복사하기"; }, 2000); 
-  }); 
-}
-
-function exportCSV() {
-  if(currentLogs.length === 0) return showToast("저장할 데이터가 없습니다.");
-  let csv = "\uFEFFID,작성자,날짜,시간,사업명,업무,관계\n";
-  const esc = str => (str && (str.includes(',') || str.includes('"') || str.includes('\n'))) ? `"${str.replace(/"/g, '""')}"` : str;
-  currentLogs.forEach(l => csv += `${esc(l.id)},${esc(l.user)},${esc(l.date)},${esc(l.time)},${esc(l.biz)},${esc(l.task)},${esc(l.relation)}\n`);
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-  link.download = `업무일지_${document.getElementById('inpDate').value}.csv`; link.click();
-}
-
-document.getElementById('inBiz').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('inTask').focus(); });
-document.getElementById('inTask').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('inDetails').focus(); });
-document.getElementById('inDetails').addEventListener('keydown', e => { if(e.key === 'Enter') addLog(); });
-
-loadData();
+let tt;
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);}
 </script>
 </body>
 </html>
