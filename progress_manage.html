@@ -1,329 +1,70 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>진도관리 — StackNote</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD@100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css"/>
-<style>
-:root{--ink:#000;--ink-soft:#1e293b;--ink-mute:#94a3b8;}
-html,body{height:100%;}
-body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;background:radial-gradient(1000px 800px at 5% 5%,#fff,transparent 65%),radial-gradient(1200px 900px at 95% 95%,#cbd5e1,transparent 65%),linear-gradient(180deg,#f1f5f9 0%,#e2e8f0 100%);background-attachment:fixed;}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.07  0 0 0 0 0.012 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");mix-blend-mode:multiply;opacity:.35;}
-main,nav,footer{position:relative;z-index:1;}
-.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;display:inline-block;}
-.nav{background:rgba(255,255,255,0.85);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-bottom:1px solid rgba(255,255,255,1);}
-.brand{font-family:'Space Grotesk',sans-serif;font-weight:800;letter-spacing:-0.05em;font-size:20px;color:var(--ink);}
-.stitle{font-family:'Space Grotesk',sans-serif;font-weight:800;letter-spacing:-0.03em;color:var(--ink);font-size:19px;text-transform:uppercase;}
-.sko{font-size:13px;font-weight:700;color:var(--ink-mute);margin-left:10px;}
-.island{background:linear-gradient(180deg,rgba(255,255,255,0.7) 0%,rgba(248,250,252,0.4) 100%);border:1px solid rgba(255,255,255,0.8);border-top:1px solid rgba(255,255,255,1);border-radius:24px;box-shadow:0 20px 50px -20px rgba(15,23,42,0.12);backdrop-filter:blur(48px) saturate(180%);-webkit-backdrop-filter:blur(48px) saturate(180%);padding:28px 32px;}
-.tbl{width:100%;border-collapse:collapse;}
-.tbl th{font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.25em;font-weight:700;color:var(--ink-mute);text-transform:uppercase;padding:0 10px 14px;text-align:left;border-bottom:1px solid rgba(15,23,42,0.07);}
-.tbl td{padding:9px 10px;border-bottom:1px solid rgba(15,23,42,0.04);vertical-align:middle;}
-.tbl tr:last-child td{border-bottom:none;}
-.tbl tr[draggable]:hover td{background:rgba(255,255,255,0.5);}
-.tbl tr.dragging{opacity:0.35;}
-.tbl tr.drag-over td{background:rgba(99,102,241,0.06);}
-.inp{width:100%;background:rgba(255,255,255,0.8);border:1px solid rgba(15,23,42,0.1);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink);outline:none;transition:border-color .2s;}
-.inp:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;}
-.b-ok{background:#ecfdf5;color:#065f46;}.b-warn{background:#fffbeb;color:#92400e;}.b-crit{background:#fef2f2;color:#991b1b;}.b-done{background:#f1f5f9;color:#475569;}.b-idle{background:#f8fafc;color:#94a3b8;}
-.mbar{height:3px;border-radius:99px;background:rgba(15,23,42,0.08);overflow:hidden;width:80px;}
-.mfill{height:100%;border-radius:99px;background:linear-gradient(90deg,#0b1220,#334155);}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;border:none;outline:none;}
-.bp{background:#0b1220;color:#fff;box-shadow:0 4px 12px rgba(15,23,42,0.2);}.bp:hover{background:#1e293b;transform:translateY(-1px);}
-.bg2{background:rgba(255,255,255,0.7);color:var(--ink-soft);border:1px solid rgba(15,23,42,0.1);}.bg2:hover{background:#fff;}
-.bd{background:rgba(254,242,242,0.9);color:#991b1b;border:1px solid rgba(252,165,165,0.4);}.bd:hover{background:#fef2f2;}
-.bd-solid{background:#ef4444;color:#fff;box-shadow:0 4px 12px rgba(239,68,68,0.2);}.bd-solid:hover{background:#dc2626;transform:translateY(-1px);}
-.bsm{padding:5px 12px;font-size:11px;}
-.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#0b1220;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);z-index:999;box-shadow:0 20px 40px rgba(15,23,42,0.3);white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.mbg{position:fixed;inset:0;background:rgba(15,23,42,0.15);backdrop-filter:blur(12px);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s ease;}
-.mbg.open{opacity:1;visibility:visible;}
-.mbox{width:520px;background:linear-gradient(160deg,rgba(255,255,255,0.95) 0%,rgba(248,250,252,0.9) 100%);border:1px solid rgba(255,255,255,1);border-radius:28px;padding:36px 40px;box-shadow:0 40px 80px -20px rgba(15,23,42,0.25),inset 0 1px 0 rgba(255,255,255,1);backdrop-filter:blur(40px);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);}
-.mbg.open .mbox{transform:translateY(0);}
-.mbox-danger { border-top: 4px solid #ef4444; }
-.mtitle-danger { color: #991b1b; display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
-.mtitle{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.03em;margin-bottom:24px;}
-.field{margin-bottom:16px;}.field label{display:block;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
-.sdot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;}
-.sdot.ok{background:#34d399;}.sdot.loading{background:#fbbf24;animation:pulse 1s infinite;}.sdot.err{background:#f87171;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-footer{font-size:11px;color:var(--ink-mute);padding:40px 0 24px;text-align:center;font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.6;}
-</style>
-</head>
-<body>
-<nav class="fixed top-0 left-0 right-0 z-50 nav">
-  <div class="flex justify-between items-center px-10 py-3 w-full max-w-[1920px] mx-auto">
-    <div class="flex items-center gap-6">
-      <a href="index.html" class="flex items-center gap-3">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="16.5" width="18" height="3" rx="1" fill="#000"/><rect x="3" y="10.5" width="14" height="3" rx="1" fill="#64748b"/><rect x="3" y="4.5" width="10" height="3" rx="1" fill="#cbd5e1"/></svg>
-        <span class="brand">Stack<span style="color:var(--ink-mute);font-weight:600;">Note</span></span>
-      </a>
-      <span class="text-[11px] font-black text-slate-400 tracking-[.2em] uppercase">/ 진도관리</span>
-    </div>
-    <div class="flex items-center gap-3">
-      <span class="flex items-center gap-2 text-[11px] font-bold text-slate-400 mr-2">
-        <span class="sdot loading" id="sdot"></span><span id="stxt">불러오는 중...</span>
-      </span>
-      <button class="btn bg2 bsm" onclick="location.href='index.html'"><span class="ms" style="font-size:14px;">home</span>메인으로</button>
-      <button class="btn bg2 bsm" onclick="loadData()"><span class="ms" style="font-size:14px;">sync</span>DB 동기화</button>
-      <button class="btn bp" onclick="saveAll()"><span class="ms" style="font-size:14px;">cloud_upload</span>수동 저장</button>
-    </div>
-  </div>
-</nav>
+/**
+ * StackNote Mark 1.1 Backend - Core Logic
+ * 대상 시트명: progress_manage
+ */
 
-<main class="pt-[100px] px-10 pb-10 w-full max-w-[1920px] mx-auto flex-1">
-  <section class="mt-4">
-    <div class="flex items-baseline justify-between mb-6 px-1">
-      <div><h2 class="stitle" style="display:inline;">사업 진도관리</h2><span class="sko">Project Progress Manager</span></div>
-      <button class="btn bg2" onclick="openAdd()"><span class="ms" style="font-size:15px;">add_circle</span>사업 추가</button>
-    </div>
-    <div class="island">
-      <table class="tbl">
-        <thead><tr>
-          <th style="width:36px;"></th><th style="width:50px;">순서</th><th style="width:90px;">약어 ID</th>
-          <th>풀네임</th><th style="width:110px;">팀</th><th style="width:110px;">진행률</th>
-          <th style="width:90px;">상태</th><th>구글시트 URL</th><th style="width:90px;"></th>
-        </tr></thead>
-        <tbody id="tbody"><tr><td colspan="9" style="text-align:center;padding:40px;opacity:0.4;font-size:13px;font-weight:700;letter-spacing:.1em;">LOADING ···</td></tr></tbody>
-      </table>
-    </div>
-  </section>
-</main>
-<footer>© 2026 StackNote · CHAN LEE · 진도관리</footer>
-
-<div class="mbg" id="emodal">
-  <div class="mbox">
-    <div class="mtitle" id="mtitle">사업 추가</div>
-    <input type="hidden" id="eidx" value="-1"/>
-    <div class="field"><label>약어 (ID)</label><input class="inp" id="eid" placeholder="예: HBM"/></div>
-    <div class="field"><label>풀네임</label><input class="inp" id="efull" placeholder="예: HBM 고도화 사업"/></div>
-    <div class="field"><label>팀</label>
-      <select class="inp" id="eteam"><option>식품AX팀</option><option>환경AX팀</option><option>PE실</option><option>PM실</option><option>PS실</option></select>
-    </div>
-    <div class="field"><label>진행률 (%)</label><input class="inp" id="epct" type="number" min="0" max="100"/></div>
-    <div class="field"><label>상태</label>
-      <select class="inp" id="estat">
-        <option value="ok">정상 (ok)</option><option value="warn">주의 (warn)</option>
-        <option value="crit">긴급 (crit)</option><option value="done">완료 (done)</option><option value="idle">미시작 (idle)</option>
-      </select>
-    </div>
-    <div class="field"><label>구글시트 URL (팝업에 표시)</label><input class="inp" id="eurl" placeholder="https://docs.google.com/spreadsheets/d/..."/></div>
-    <div class="flex gap-3 mt-6 justify-end">
-      <button class="btn bg2" onclick="closeModal()">취소</button>
-      <button class="btn bp" onclick="saveModal()"><span class="ms" style="font-size:14px;">database</span>DB저장</button>
-    </div>
-  </div>
-</div>
-
-<div class="mbg" id="delModal">
-  <div class="mbox mbox-danger">
-    <div class="mtitle-danger"><span class="ms" style="font-size: 24px;">warning</span> DB 영구 삭제 경고</div>
-    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
-      <p id="delMsg" style="font-size: 14px; font-weight: 700; color: #991b1b; word-break: break-all;"></p>
-    </div>
-    <p style="font-size: 13px; color: #475569; margin-bottom: 24px; line-height: 1.5; font-weight: 600;">
-      이 작업은 되돌릴 수 없으며, 확인 시 <span style="color: #ef4444;">클라우드에서 즉시 삭제</span>됩니다.<br>정말 삭제하시겠습니까?
-    </p>
-    <div class="flex gap-3 justify-end">
-      <button class="btn bg2" onclick="closeDelModal()">취소</button>
-      <button class="btn bd-solid" onclick="confirmDel()"><span class="ms" style="font-size:14px;">delete_forever</span>삭제 실행</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){ completeSave(); }"></iframe>
-<form id="hidden_form" target="hidden_iframe" method="POST" style="display:none;">
-  <input type="hidden" name="payload" id="payload_input">
-</form>
-
-<script>
-// 🚨 만약 앱스스크립트 '새 배포' 후 URL이 바뀌었다면 여기를 꼭 수정해주세요!
-const SHEET_ID='1crtSYsliYiaaggTyAki3CCQNFUZx9akFZJAdT3Dd1oI';
-const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
-const API='https://script.google.com/macros/s/AKfycbxPPvOjgSsns-szAWcQH2LHiax421tLVNRxq8OgTbrwbSOjYW6o43AgG_W5G8Nq2B3hUA/exec';
-
-let projects=[], dragSrc=null, pendingDelIdx = -1;
-const SL={ok:'정상',warn:'주의',crit:'긴급',done:'완료',idle:'미시작'};
-const SC={ok:'b-ok',warn:'b-warn',crit:'b-crit',done:'b-done',idle:'b-idle'};
-
-function parseCSV(t){
-  const lines=t.trim().split('\n');
-  if(lines.length < 2) return [];
-  const hdrs=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  const results = [];
-  for (let j = 1; j < lines.length; j++) {
-    const line = lines[j];
-    if (!line.trim()) continue;
-    const v = []; let c = '', q = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (ch === '"') { q = !q; } else if (ch === ',' && !q) { v.push(c.trim()); c = ''; } else { c += ch; }
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  try {
+    // 동시성 제어 (데이터 충돌 방지)
+    lock.waitLock(10000); 
+    
+    var params = JSON.parse(e.parameter.payload);
+    var action = params.action;
+    var sheetName = params.sheetName || "progress_manage";
+    var data = params.projects;
+    
+    if (action === "write") {
+      return writeToSheet(sheetName, data);
     }
-    v.push(c.trim());
-    const o = {}; hdrs.forEach((h, i) => o[h] = (v[i] || '').replace(/^"|"$/g, ''));
-    if (o.id) results.push(o);
-  }
-  return results;
-}
-
-async function loadData(){
-  setSS('loading','불러오는 중...');
-  try{
-    const r=await fetch(CSV_URL);
-    const txt=await r.text();
-    projects=parseCSV(txt).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
-    render();setSS('ok','동기화 완료');
-  }catch(e){setSS('err','연결 실패');showToast('시트 연결 실패');}
-}
-
-function render(){
-  const b=document.getElementById('tbody');
-  if(!projects.length){b.innerHTML='<tr><td colspan="9" style="text-align:center;padding:40px;opacity:0.4;font-size:13px;font-weight:700;">사업 없음</td></tr>';return;}
-  b.innerHTML=projects.map((p,i)=>{
-    const pct=Number(p.pct)||0;
-    const su=p.sheet_url?'…'+p.sheet_url.slice(-28):'—';
-    return `<tr draggable="true" ondragstart="ds(event,${i})" ondragover="dov(event,${i})" ondrop="dp(event,${i})" ondragend="de()">
-      <td style="cursor:grab;color:#cbd5e1;text-align:center;"><span class="ms" style="font-size:18px;">drag_indicator</span></td>
-      <td style="font-family:'Space Grotesk';font-size:12px;color:var(--ink-mute);font-weight:700;">${i+1}</td>
-      <td style="font-family:'Space Grotesk';font-size:14px;font-weight:800;letter-spacing:-0.02em;">${p.id}</td>
-      <td style="font-size:13px;font-weight:600;" title="${p.full_name}">${p.full_name}</td>
-      <td style="font-size:12px;font-weight:600;color:var(--ink-soft);">${p.team}</td>
-      <td><div style="display:flex;align-items:center;gap:8px;"><div class="mbar"><div class="mfill" style="width:${pct}%"></div></div><span style="font-family:'Space Grotesk';font-size:12px;font-weight:700;">${pct}%</span></div></td>
-      <td><span class="badge ${SC[p.status]||'b-idle'}">${SL[p.status]||p.status}</span></td>
-      <td style="font-size:11px;color:var(--ink-mute);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.sheet_url||''}">${su}</td>
-      <td><div style="display:flex;gap:6px;">
-        <button class="btn bg2 bsm" onclick="openEdit(${i})"><span class="ms" style="font-size:13px;">edit</span></button>
-        <button class="btn bd bsm" onclick="initDel(${i})"><span class="ms" style="font-size:13px;">delete</span></button>
-      </div></td>
-    </tr>`;
-  }).join('');
-}
-
-function ds(e,i){dragSrc=i;e.currentTarget.classList.add('dragging');}
-function dov(e,i){e.preventDefault();document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('drag-over'));if(i!==dragSrc)e.currentTarget.classList.add('drag-over');}
-function dp(e,i){ 
-  e.preventDefault(); 
-  if(dragSrc===null||dragSrc===i)return; 
-  const m=projects.splice(dragSrc,1)[0]; 
-  projects.splice(i,0,m); 
-  render(); 
-  saveAll(); // 순서 변경 시 자동 저장
-}
-function de(){document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('dragging','drag-over'));dragSrc=null;}
-
-function openAdd(){
-  document.getElementById('mtitle').textContent='사업 추가';
-  document.getElementById('eidx').value='-1';
-  ['eid','efull','eurl'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('epct').value='0';
-  document.getElementById('eteam').value='식품AX팀';
-  document.getElementById('estat').value='idle';
-  document.getElementById('emodal').classList.add('open');
-}
-
-function openEdit(i){
-  const p=projects[i];
-  document.getElementById('mtitle').textContent='사업 수정';
-  document.getElementById('eidx').value=i;
-  document.getElementById('eid').value=p.id||'';
-  document.getElementById('efull').value=p.full_name||'';
-  document.getElementById('eteam').value=p.team||'식품AX팀';
-  document.getElementById('epct').value=p.pct||0;
-  document.getElementById('estat').value=p.status||'idle';
-  document.getElementById('eurl').value=p.sheet_url||'';
-  document.getElementById('emodal').classList.add('open');
-}
-function closeModal(){document.getElementById('emodal').classList.remove('open');}
-
-// ✅ 추가/수정: 브라우저 1차 경고 + 자동저장 복구
-function saveModal(){
-  const idx=Number(document.getElementById('eidx').value);
-  const o={
-    id:document.getElementById('eid').value.trim(),
-    full_name:document.getElementById('efull').value.trim(),
-    team:document.getElementById('eteam').value,
-    pct:Number(document.getElementById('epct').value)||0,
-    status:document.getElementById('estat').value,
-    sheet_url:document.getElementById('eurl').value.trim(),
-    order:idx===-1?projects.length+1:(projects[idx].order||idx+1)
-  };
-  
-  if(!o.id||!o.full_name){showToast('약어와 풀네임 필수');return;}
-  
-  // 브라우저 1차 경고
-  if(!confirm("입력하신 정보가 DB에 반영됩니다.\n계속하시겠습니까?")) return;
-
-  if(idx===-1)projects.push(o);else projects[idx]={...projects[idx],...o};
-  render(); 
-  closeModal(); 
-  saveAll(); // 자동 저장
-}
-
-// ✅ 삭제: 브라우저 1차 경고 -> 2차 레이어팝업 복구
-function initDel(i) {
-  // 브라우저 1차 경고
-  if(!confirm(`"${projects[i].id}" 항목을 삭제하시겠습니까?`)) return;
-  
-  // 2차 레이어 팝업
-  pendingDelIdx = i;
-  document.getElementById('delMsg').textContent = `[${projects[i].id}] ${projects[i].full_name}`;
-  document.getElementById('delModal').classList.add('open');
-}
-function closeDelModal() { document.getElementById('delModal').classList.remove('open'); pendingDelIdx = -1; }
-function confirmDel() {
-  if (pendingDelIdx > -1) { 
-    projects.splice(pendingDelIdx, 1); 
-    render(); 
-    saveAll(); // 자동 저장
-    closeDelModal(); 
+    
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ok: false, error: err.toString()}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
   }
 }
 
-// 🚨 백엔드(GAS)로 데이터 쏘는 통신 모듈 🚨
-window.submitted = false;
-let saveFallback;
+function writeToSheet(sheetName, data) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(sheetName);
+  
+  if (!sheet) {
+    return ContentService.createTextOutput(JSON.stringify({ok: false, error: "Sheet not found"}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
 
-function saveAll(){
-  setSS('loading','저장 중...');
+  // 1. 헤더 정의 (순서가 매우 중요합니다)
+  var headers = ["id", "full_name", "team", "pct", "status", "sheet_url", "order"];
   
-  const payloadObj = { 
-    action: 'write', 
-    projects: projects.map((p,i)=>({...p,order:i+1})) 
-  };
-  
-  // 폼에 데이터 입력
-  document.getElementById('payload_input').value = JSON.stringify(payloadObj);
-  const form = document.getElementById('hidden_form');
-  form.action = API;
-  
-  window.submitted = true;
-  form.submit(); // 리다이렉트 무시하고 통신
+  // 2. 데이터 가공 (Object Array -> 2D Array)
+  var rows = data.map(function(p) {
+    return [
+      p.id || "",
+      p.full_name || "",
+      p.team || "",
+      p.pct || 0,
+      p.status || "idle",
+      p.sheet_url || "",
+      p.order || 0
+    ];
+  });
 
-  // 2.5초 후 화면에 완료 표시
-  clearTimeout(saveFallback);
-  saveFallback = setTimeout(()=>{ if(window.submitted) completeSave(); }, 2500);
+  // 3. 시트 초기화 및 쓰기 (헤더 제외한 데이터 영역만 삭제 후 쓰기)
+  if (sheet.getLastRow() > 1) {
+    sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).clearContent();
+  }
+  
+  if (rows.length > 0) {
+    sheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ok: true}))
+                       .setMimeType(ContentService.MimeType.JSON);
 }
 
-function completeSave() {
-  if(!window.submitted) return;
-  window.submitted = false;
-  clearTimeout(saveFallback);
-  setSS('ok','저장 완료');
-  showToast('DB에 안전하게 동기화되었습니다');
+// GET 요청 테스트용 (필요 시)
+function doGet(e) {
+  return ContentService.createTextOutput("StackNote API is Active.");
 }
-
-function setSS(s,t){document.getElementById('sdot').className='sdot '+s;document.getElementById('stxt').textContent=t;}
-let tt;
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);}
-
-loadData();
-</script>
-</body>
-</html>
